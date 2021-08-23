@@ -1,0 +1,76 @@
+import React, { useState, useEffect } from 'react'
+import { View, Text, FlatList, StyleSheet } from 'react-native'
+import Loader from '../Components/Loader'
+import FloatActionButton from '../Components/FloatActionButton'
+import Endpoints from '../../Constants/Endpoints'
+import PlanListItem from './Components/PlanListItem'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getItems from '../../Functions/getItems'
+import Colors from '../../Constants/Colors'
+
+
+const ListPlans = ({ navigation }) => {
+
+    const [plans, setPlans] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const getPlans = async () => {
+
+        const user_id = await AsyncStorage.getItem('user_id');
+
+        await getItems(Endpoints.get_plans + user_id).then((data) => {
+            setPlans(data)
+            setLoading(false)
+        })
+
+    }
+
+    useEffect(() => {
+
+        const unsubscribe = navigation.addListener('focus', () => {
+            getPlans();
+        });
+
+        return () => {
+            // Unsubscribe for the focus Listener
+            unsubscribe;
+        };
+    })
+
+
+    const renderItem = ({ item }) => {
+        return (
+            <PlanListItem
+                plan={item}
+            />
+
+        )
+    }
+
+
+    return (
+        <View style={styles.container}>
+            <Loader loading={loading} />
+            <FlatList
+                style={{ elevation: 1 }}
+                keyExtractor={(item) => item.plan_id}
+                data={plans}
+                renderItem={renderItem}
+            />
+
+            <FloatActionButton clickHandler={() => {
+                navigation.navigate("AddPlan");
+            }} />
+
+        </View>
+    )
+}
+
+export default ListPlans;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: Colors.mainBackgroundColor,
+    }
+})
