@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 
 import Loader from '../Components/Loader';
-import DateInput from '../Components/DateInput'
 import GoalTextInput from './Components/GoalTextInput'
 import TaskHeader from './Components/TaskHeader'
 import Strings from '../../Constants/Strings/en'
@@ -373,6 +372,11 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         paddingVertical: 10,
         fontSize: 16,
+    },
+    errorTextStyle: {
+        color: 'red',
+        textAlign: 'center',
+        fontSize: 14,
     },
 
 });

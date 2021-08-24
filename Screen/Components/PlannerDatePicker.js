@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, StyleSheet, Platform, TouchableOpacity, Text } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Icon } from 'react-native-elements';
 
+const PlannerDatePicker = (props) => {
 
-const DateTimePickerInput = (props) => {
+    const [date, setDate] = useState('')
+    const [dateShow, setDateShow] = useState(false);
+    const [dateMode, setDateMode] = useState('date');
 
+    const onChangeDate = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setDateShow(Platform.OS === 'ios');
+        setDate(currentDate);
+        props.onChange
+    };
+
+    const showDateMode = (currentMode) => {
+        setDateShow(true);
+        setDateMode(currentMode);
+    };
+
+    
     const formatDate = (date) => {
         return `${date.getDate()}/${date.getMonth() +
             1}/${date.getFullYear()}`;
@@ -19,27 +35,27 @@ const DateTimePickerInput = (props) => {
                     containerStyle={styles.iconStyle}
                     type="font-awesome"
                     name="calendar"
-                    onPress={props.showMode} //() => showMode('date')
+                    onPress={showDateMode} //() => showMode('date')
                 />
-                <Text>{props.date != '' ? formatDate(props.date) : props.inputLabel }</Text>
+                <Text>{date != '' ? formatDate(date) : props.inputLabel }</Text>
             </View>
 
-            {props.show && (
+            {dateShow && (
                 <DateTimePicker
                     testID="dateTimePicker"
-                    value={!props.date ? new Date() : props.date}
-                    mode={props.mode}
+                    value={!date ? new Date() : date}
+                    mode={dateMode}
                     is24Hour={true}
                     display="default"
-                    onChange={props.onChange}
+                    onChange={onChangeDate}
                 />
             )}
         </View>
     )
-
 }
 
-export default DateTimePickerInput;
+export default PlannerDatePicker;
+
 
 const styles = StyleSheet.create({
     SectionStyle: {
