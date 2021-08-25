@@ -3,7 +3,7 @@ import Theme from '../Constants/Theme'
 import AppReducer from './AppReducer'
 
 const initialState = {
-    theme: 'primary'
+    theme: 'light_theme'
 }
 
 export const GlobalContext = createContext(initialState);

@@ -10,8 +10,19 @@ const NavButton = (props) => {
     <Button
       title={props.title}
       onPress={props.onPress}
-      buttonStyle={{ margin: 5, backgroundColor: theme.buttonBackGroundColor }}
+      buttonStyle={{ margin: 5, backgroundColor: theme.buttonBackgroundColor }}
       icon={
+        props.navArrowDirection == 'left' ? 
+        <Icon
+          name={"arrow-" + props.navArrowDirection}
+          type="font-awesome"
+          color="white"
+          containerStyle={{
+            position: "absolute",
+            left: 5,
+          }}
+        />
+        : 
         <Icon
           name={"arrow-" + props.navArrowDirection}
           type="font-awesome"
@@ -21,6 +32,8 @@ const NavButton = (props) => {
             right: 5,
           }}
         />
+        
+        
       }
     />
   );

@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import { Icon } from 'react-native-elements'
 import Colors from '../../../Constants/Colors'
+import { GlobalContext } from '../../../Context/GlobalContext';
 
 
 const ItemHeader = ({ title }) => {
+
+    const {theme} = useContext(GlobalContext)
+
     return (
-        <View style={[styles.sectionHeaderStyle, { marginTop: 5 }]}>
-            <Text style={styles.sectionHeaderText}>{title}</Text>
+        <View style={[styles.sectionHeaderStyle, {backgroundColor: theme.headerBackgroundColor}, { marginTop: 5 }]}>
+            <Text style={[styles.sectionHeaderText,{color:theme.headerFontColor}]}>{title}</Text>
             <Icon
                 type="font-awesome"
                 name="caret-down"
-                color='white'
+                color={theme.headerFontColor}
                 containerStyle={styles.iconContainerStyle}
             />
         </View>
@@ -25,16 +29,16 @@ const styles = StyleSheet.create({
     sectionHeaderStyle: {
         width: Dimensions.get('window').width - 10,
         margin: 5,
-        borderWidth: 1,
-        borderColor: "grey",
         padding: 10,
         alignItems: "center",
-        backgroundColor: Colors.mainBackgroundColor,
+        elevation:5,
+        shadowColor:"gray",
+        shadowRadius:1,
     },
     sectionHeaderText: {
         fontWeight: "bold",
         fontSize: 15,
-        color: "white",
+        
     }
     ,
     iconContainerStyle: {

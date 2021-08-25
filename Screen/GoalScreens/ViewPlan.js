@@ -1,18 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import getItems from "../../Functions/getItems";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loader from "../Components/Loader";
 import Endpoints from "../../Constants/Endpoints";
-import { GlobalContext } from "../../Context/GlobalContext";
-import NavButton from "../Components/NavButton";
 import PlannerView from "../Components/PlannerView";
 
 const ViewPlan = ({ navigation }) => {
   const [plan, setPlan] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const { theme } = useContext(GlobalContext);
+
 
   const DATA = [
     {
@@ -81,27 +79,16 @@ const ViewPlan = ({ navigation }) => {
   return (
     <View>
       <Loader loading={loading} />
-      <View style={{ flexDirection: "row" }}>
-        <View style={{ flex: 1 }}>
-          <NavButton
-            navArrowDirection="left"
-            title="All Plans"
-            onPress={() => navigation.navigate("ListPlans")}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <NavButton
-            navArrowDirection="right"
-            title="Plan Goals"
-            onPress={() =>
-              navigation.navigate("ListGoals", { planId: plan.plan_id })
-            }
-          />
-        </View>
-      </View>
-      <View>
-        <PlannerView data={DATA} />
-      </View>
+      
+        <PlannerView 
+          data={DATA} 
+          showNavButtons={true}
+          onLeftbackPress={() => navigation.navigate("ListPlans")}
+          onRightButtonPress={() => navigation.navigate("ListGoals", { planId: plan.plan_id })}
+          leftButtonTitle = "All Plans"
+          rightButtonTitle = "Plan Goals"
+        />
+     
     </View>
   );
 };
