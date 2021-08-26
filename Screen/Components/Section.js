@@ -14,7 +14,12 @@ const Section = ({ title, rowData }) => {
         {rowData.length == 0 ? null : (
           <View style={[
             styles.sectionContent,
-            { backgroundColor: theme.sectionContentBackgroundColor },
+            { 
+              backgroundColor: theme.sectionContentBackgroundColor, 
+              borderColor:theme.contentBorderColor,
+              borderStyle:'solid',
+              borderWidth:1,
+            },
           ]}>
             {rowData.map((row, rowIndex) => {
               return <ContentRow key={rowIndex} tiles={row} />;

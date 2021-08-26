@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// import { Ionicons } from '@expo/vector-icons';
 import { Icon } from 'react-native-elements'
 
 import DashboardScreen from '../DashboardScreens/DashboardScreen'
 import StoryStackNavigator from './StoryStackNavigator'
 import GoalScreenStackNavigator from './GoalScreenStackNavigator'
 
-
-
 import NavigationDrawerHeader from '../Components/NavigationDrawerHeader';
-import Strings from '../../Constants/Strings/en'
-
 import Colors from '../../Constants/Colors';
 import LogoTitle from '../Components/LogoTitle'
+import { GlobalContext } from '../../Context/GlobalContext';
 
 const Tab = createBottomTabNavigator();
 
 
 const MainBottomTabNavigator = ({ route, navigation }) => {
+
+    const {theme} = useContext(GlobalContext)
+
     return (
         <Tab.Navigator
             initialRouteName="DashboardScreen"
@@ -27,7 +26,7 @@ const MainBottomTabNavigator = ({ route, navigation }) => {
                     <NavigationDrawerHeader navigationProps={navigation} />
                 ),
                 headerStyle: {
-                    backgroundColor: Colors.mainBackgroundColor, //Set Header color
+                    backgroundColor: theme.mainBackGroundColor, //Set Header color
                     height: 160,
                 },
                 headerTitle: props => <LogoTitle {...props} />,
@@ -38,7 +37,7 @@ const MainBottomTabNavigator = ({ route, navigation }) => {
 
                 tabBarActiveTintColor: 'tomato',
                 tabBarInactiveTintColor: 'gray',
-                tabBarStyle: { backgroundColor: Colors.mainBackgroundColor },
+                tabBarStyle: { backgroundColor: theme.mainBackGroundColor },
                 tabBarIcon: ({ focused, color, size }) => {
                     //console.log(route)
                     let iconName = '';
