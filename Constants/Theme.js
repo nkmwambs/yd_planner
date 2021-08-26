@@ -12,7 +12,8 @@ export default {
         headerBorderColor:"#307ecc",
         contentBorderColor:"white",
         navButtonBorderColor: "#7DE24E",
-        listContentBackgroundColor: "#307ecc"
+        listContentBackgroundColor: "#307ecc",
+        crudContentBackgroundColor: "white",
     },
     night_theme:{
         mainBackGroundColor: 'black',//Colors.mainBackGroundColor,
@@ -25,6 +26,7 @@ export default {
         headerBorderColor:"white",
         contentBorderColor:"white",
         navButtonBorderColor: "white",
-        listContentBackgroundColor: "black"
+        listContentBackgroundColor: "black",
+        crudContentBackgroundColor: "black",
     }
 }

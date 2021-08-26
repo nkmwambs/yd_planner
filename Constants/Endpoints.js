@@ -4,6 +4,7 @@ export default {
     dashboard_statistics: "https://compassion-africa.org/api/user/get_dashboard_statistics/",
     themes: "https://compassion-africa.org/api/user/themes/",
     add_goal: "https://compassion-africa.org/api/user/add_goal/",
+    add_plan: "https://compassion-africa.org/api/user/add_plan/",
     get_goal: "https://compassion-africa.org/api/user/goal/",
     add_task: 'https://compassion-africa.org/api/user/add_task/',
     task_types: "https://compassion-africa.org/api/user/get_task_types",

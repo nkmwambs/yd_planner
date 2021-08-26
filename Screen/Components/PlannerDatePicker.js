@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, StyleSheet, Text } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Icon } from 'react-native-elements';
+import { PlanContext } from '../../Context/PlanContext';
+
 
 const PlannerDatePicker = (props) => {
 
@@ -9,11 +11,18 @@ const PlannerDatePicker = (props) => {
     const [dateShow, setDateShow] = useState(false);
     const [dateMode, setDateMode] = useState('date');
 
+    const {changeStartDate, changeEndDate} = useContext(PlanContext)
+
     const onChangeDate = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setDateShow(Platform.OS === 'ios');
         setDate(currentDate);
-        props.onChange
+        
+        if(props.datePosition == 'start'){
+            changeStartDate(mysqlFormatDate(currentDate));
+        }else{
+            changeEndDate(mysqlFormatDate(currentDate));
+        }
     };
 
     const showDateMode = (currentMode) => {
@@ -25,6 +34,13 @@ const PlannerDatePicker = (props) => {
     const formatDate = (date) => {
         return `${date.getDate()}/${date.getMonth() +
             1}/${date.getFullYear()}`;
+    };
+
+    const mysqlFormatDate = (date) => {
+        return `${date.getFullYear()}-${(date.getMonth() +
+            1) < 10 ? '0' + (date.getMonth() +
+            1): (date.getMonth() +
+            1)}-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
     };
 
     return (
