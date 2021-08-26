@@ -1,16 +1,66 @@
 import React, { useState, useEffect } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import getItems from "../../Functions/getItems";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loader from "../Components/Loader";
 import Endpoints from "../../Constants/Endpoints";
 import PlannerView from "../Components/PlannerView";
+import EmptyPlaceholder from '../Components/EmptyPlaceholder'
 
-const ViewPlan = ({ navigation }) => {
+const ViewPlan = ({ route, navigation }) => {
   const [plan, setPlan] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  let planId = 0;
 
+  if (route.params != undefined) {
+    planId = route.params.planId;
+  }
+
+  const getPlan = async () => {
+    const user_id = await AsyncStorage.getItem("user_id");
+    let viewPlan = Endpoints.active_plan + user_id;
+
+    if (planId > 0) {
+      viewPlan = Endpoints.get_plan + planId;
+    }
+
+    await getItems(viewPlan).then((data) => {
+      setPlan(data);
+      setLoading(false);
+      //console.log(data)
+    });
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      getPlan();
+    });
+
+    return () => {
+      // Unsubscribe for the focus Listener
+      unsubscribe;
+    };
+  });
+
+  const is_valid_object = (obj) => {
+    return typeof obj == "object" && obj != null;
+  };
+
+  if (!is_valid_object(plan)) {
+    return (
+      <View>
+        <Loader loading={loading} />
+        <EmptyPlaceholder
+          placeholderText="You have no Plans Created"
+          onClickHandler={() => {
+            navigation.navigate("AddPlan");
+          }}
+        />
+        
+      </View>
+    );
+  }
 
   const DATA = [
     {
@@ -40,12 +90,12 @@ const ViewPlan = ({ navigation }) => {
       title: "Plan Progress",
       rows: [
         [
-          { title: "Goals", value: 6 },
-          { title: "Tasks", value: 21 },
+          { title: "Goals", value: 0 },
+          { title: "Tasks", value: 0 },
         ],
         [
-          { title: "Due Tasks", value: 4 },
-          { title: "Overdue Tasks", value: 2 },
+          { title: "Due Tasks", value: 0 },
+          { title: "Overdue Tasks", value: 0 },
         ],
       ],
     },
@@ -55,40 +105,19 @@ const ViewPlan = ({ navigation }) => {
     },
   ];
 
-  const getPlan = async () => {
-    const user_id = await AsyncStorage.getItem("user_id");
-
-    await getItems(Endpoints.active_plan + user_id).then((data) => {
-      setPlan(data);
-      setLoading(false);
-      //console.log(data)
-    });
-  };
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getPlan();
-    });
-
-    return () => {
-      // Unsubscribe for the focus Listener
-      unsubscribe;
-    };
-  });
-
   return (
     <View>
       <Loader loading={loading} />
-      
-        <PlannerView 
-          data={DATA} 
-          showNavButtons={true}
-          onLeftbackPress={() => navigation.navigate("ListPlans")}
-          onRightButtonPress={() => navigation.navigate("ListGoals", { planId: plan.plan_id })}
-          leftButtonTitle = "All Plans"
-          rightButtonTitle = "Plan Goals"
-        />
-     
+      <PlannerView
+        data={DATA}
+        showNavButtons={true}
+        onLeftbackPress={() => navigation.navigate("ListPlans")}
+        onRightButtonPress={() =>
+          navigation.navigate("ListGoals", { planId: planId })
+        }
+        leftButtonTitle="All Plans"
+        rightButtonTitle="Plan Goals"
+      />
     </View>
   );
 };

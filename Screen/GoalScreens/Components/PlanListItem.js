@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native'
 import { ListItem } from 'react-native-elements'
@@ -6,9 +7,12 @@ import ContentRow from './ContentRow';
 
 
 const PlanListItem = ({ plan }) => {
+
+    const navigation = useNavigation()
+
     return (
         <TouchableOpacity
-            onPress={() => alert("Hello")}
+            onPress={() => navigation.navigate("ViewPlan",{planId:plan.plan_id})}
         >
             <ListItem
                 key={plan.plan_id}

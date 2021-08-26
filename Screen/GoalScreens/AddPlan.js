@@ -75,7 +75,7 @@ const NewPlan = () => {
                         plan_created_by: user_id
                     };
 
-                    console.log(dataToSend);
+                    //console.log(dataToSend);
 
                     var formBody = [];
 

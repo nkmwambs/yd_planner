@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
         //padding: 10,
         elevation: 5,
         position: 'absolute',
-        bottom: 50,
+        bottom: 10,
         right: 15,
     }
 });
