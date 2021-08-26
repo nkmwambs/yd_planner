@@ -26,7 +26,7 @@ const MainBottomTabNavigator = ({ route, navigation }) => {
                     <NavigationDrawerHeader navigationProps={navigation} />
                 ),
                 headerStyle: {
-                    backgroundColor: theme.mainBackGroundColor, //Set Header color
+                    backgroundColor: theme.headerBackgroundColor, //Set Header color
                     height: 160,
                 },
                 headerTitle: props => <LogoTitle {...props} />,
@@ -37,7 +37,7 @@ const MainBottomTabNavigator = ({ route, navigation }) => {
 
                 tabBarActiveTintColor: 'tomato',
                 tabBarInactiveTintColor: 'gray',
-                tabBarStyle: { backgroundColor: theme.mainBackGroundColor },
+                tabBarStyle: { backgroundColor: theme.tabBackgroundColor },
                 tabBarIcon: ({ focused, color, size }) => {
                     //console.log(route)
                     let iconName = '';

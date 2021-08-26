@@ -3,6 +3,7 @@ import Colors from './Colors'
 export default {
     light_theme:{
         mainBackGroundColor: 'white',
+        tabBackgroundColor: "#307ecc",
         headerBackgroundColor: '#307ecc',
         buttonBackgroundColor: '#7DE24E',
         headerFontColor: 'white',
@@ -10,10 +11,12 @@ export default {
         sectionContentBackgroundColor: "white",
         headerBorderColor:"#307ecc",
         contentBorderColor:"white",
-        navButtonBorderColor: "#7DE24E"
+        navButtonBorderColor: "#7DE24E",
+        listContentBackgroundColor: "#307ecc"
     },
     night_theme:{
         mainBackGroundColor: 'black',//Colors.mainBackGroundColor,
+        tabBackgroundColor: "black",
         headerBackgroundColor: 'black',
         buttonBackGroundColor: '#307ecc',//Colors.mainBackGroundColor,
         headerFontColor: 'white',
@@ -21,6 +24,7 @@ export default {
         sectionContentBackgroundColor: "black", 
         headerBorderColor:"white",
         contentBorderColor:"white",
-        navButtonBorderColor: "white"
+        navButtonBorderColor: "white",
+        listContentBackgroundColor: "black"
     }
 }

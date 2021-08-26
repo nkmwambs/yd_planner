@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { View, Text, FlatList, StyleSheet } from 'react-native'
+import React, { useState, useEffect, useContext } from 'react'
+import { View, FlatList, StyleSheet } from 'react-native'
 import Loader from '../Components/Loader'
 import FloatActionButton from '../Components/FloatActionButton'
 import Endpoints from '../../Constants/Endpoints'
 import PlanListItem from './Components/PlanListItem'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getItems from '../../Functions/getItems'
-import Colors from '../../Constants/Colors'
+import { GlobalContext } from '../../Context/GlobalContext'
 
 
 const ListPlans = ({ navigation }) => {
 
     const [plans, setPlans] = useState([]);
     const [loading, setLoading] = useState(true);
+    const {theme} = useContext(GlobalContext)
 
     const getPlans = async () => {
 
@@ -49,7 +50,7 @@ const ListPlans = ({ navigation }) => {
 
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container,{backgroundColor:theme.listContentBackgroundColor}]}>
             <Loader loading={loading} />
             <FlatList
                 style={{ elevation: 1 }}
@@ -71,6 +72,6 @@ export default ListPlans;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.mainBackgroundColor,
+        //backgroundColor: Colors.mainBackgroundColor,
     }
 })

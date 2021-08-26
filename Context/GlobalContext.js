@@ -1,22 +1,35 @@
-import React, { createContext, useReducer } from 'react'
+import React, { createContext, useReducer, useState } from 'react'
 import Theme from '../Constants/Theme'
 import AppReducer from './AppReducer'
 
 const initialState = {
-    theme: 'night_theme'
+    theme: 'light_theme'
 }
 
 export const GlobalContext = createContext(initialState);
 
 export const GlobalProvider = ({children}) => {
 
-    const [state, dispatch] = useReducer(AppReducer, initialState);
+    //const [state, dispatch] = useReducer(AppReducer, initialState);
+    const [theme, setTheme] = useState(initialState.theme)
+
+    const changeTheme = (theme) => {
+        // dispatch(
+        //     {
+        //         type:'CHANGE_THEME',
+        //         payload: theme
+        //     }
+        // )
+        setTheme(theme)
+    }
 
     return (
         <GlobalContext.Provider
             value={
                 {
-                    theme: Theme[state.theme]
+                    theme: Theme[theme],
+                    theme_name: theme,
+                    changeTheme
                 } 
             }
         >

@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
     StyleSheet,
     SafeAreaView,
     ScrollView,
     BackHandler,
-    Alert, TouchableOpacity, Image, View, Text
+    Alert,
 } from "react-native";
 
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -17,60 +16,10 @@ import Endpoints from '../../Constants/Endpoints'
 import RecentActivities from './RecentActivities'
 import Notices from './Notices'
 import Statistics from './Statistics'
+import ThemeChanger from '../Components/ThemeChanger'
+import UserAvatar from '../DashboardScreens/UserAvatar'
 
-
-const UserAvatar = () => {
-
-    const [userName, setUserName] = useState();
-
-    const getUserName = async () => {
-        await AsyncStorage.getItem('user_name')
-            .then((user_name) => {
-                setUserName(user_name)
-            }).catch((error) => {
-                alert("Failed to get data from storage");
-            })
-    }
-
-    useEffect(() => {
-        getUserName();
-    })
-
-    const add_story = () => {
-        alert("This is feature is upcoming");
-        //navigation.navigate("Stories");
-    }
-
-    const update_photo = () => {
-        alert("This is feature is upcoming");
-    }
-
-    return (
-        <>
-            <View style={{ alignSelf: "center", top: 10 }}>
-                <View style={styles.profileImage}>
-                    <Image source={require("../../assets/profile-pic.jpg")} style={styles.image} resizeMode="center"></Image>
-                </View>
-                <View style={styles.dm}>
-                    <TouchableOpacity onPress={add_story}>
-                        <MaterialIcons name="chat" size={18} color="#DFD8C8"></MaterialIcons>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.active}></View>
-                <View style={styles.add}>
-                    <TouchableOpacity onPress={update_photo}>
-                        <Ionicons name="ios-add" size={48} color="#DFD8C8" style={{ marginTop: 6, marginLeft: 2 }}></Ionicons>
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-            <View style={styles.infoContainer}>
-                <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{userName}</Text>
-                <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>Student</Text>
-            </View>
-        </>
-    );
-}
+import {GlobalContext} from '../../Context/GlobalContext'
 
 
 export default DashboardScreen = ({ navigation }) => {
@@ -78,7 +27,9 @@ export default DashboardScreen = ({ navigation }) => {
     const [overdueGoals, setOverdueGoals] = useState(0);
     const [dueTasks, setDueTasks] = useState(0);
     const [overdueTasks, setOverdueTasks] = useState(0);
-    const [loading, setLoading] = useState(false);
+    //const [loading, setLoading] = useState(false);
+    
+    const {theme, changeTheme, theme_name} = useContext(GlobalContext)
 
     useEffect(() => {
         useBackAction();
@@ -136,9 +87,15 @@ export default DashboardScreen = ({ navigation }) => {
         return () => backHandler.remove();
     }
 
+    const updateTheme = () => {
+        changeTheme(theme_name == 'light_theme' ? 'night_theme' : 'light_theme')
+        //alert(theme_name);
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
+                <ThemeChanger clickHandler={updateTheme} />
                 <UserAvatar />
                 <Statistics
                     overdueGoals={overdueGoals}
