@@ -17,7 +17,7 @@ import AddtaskNote from "../GoalScreens/AddTaskNote";
 import ListPlans from "../GoalScreens/ListPlans";
 import ViewPlan from "../GoalScreens/ViewPlan";
 import AddPlan from "../GoalScreens/AddPlan";
-import ViewGoal from '../GoalScreens/ViewGoal'
+import ViewGoal from "../GoalScreens/ViewGoal";
 
 import Colors from "../../Constants/Colors";
 
@@ -98,6 +98,14 @@ const GoalScreenStackNavigator = ({ route, navigation }) => {
         component={ListTasks}
         options={{
           title: "Goal Tasks",
+        }}
+      />
+
+      {/* <Stack.Screen
+        name="ListTasks"
+        component={ListTasks}
+        options={{
+          title: "Goal Tasks",
           headerLeft: (props) => (
             <HeaderBackButton
               {...props}
@@ -106,7 +114,7 @@ const GoalScreenStackNavigator = ({ route, navigation }) => {
             />
           ),
         }}
-      />
+      /> */}
 
       <Stack.Screen
         name="ViewTask"

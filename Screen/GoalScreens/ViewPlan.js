@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text } from "react-native";
 import getItems from "../../Functions/getItems";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -6,12 +6,16 @@ import Loader from "../Components/Loader";
 import Endpoints from "../../Constants/Endpoints";
 import PlannerView from "../Components/PlannerView";
 import EmptyPlaceholder from '../Components/EmptyPlaceholder'
+import { PlanContext } from "../../Context/PlanContext";
+
 
 const ViewPlan = ({ route, navigation }) => {
   const [plan, setPlan] = useState({});
   const [loading, setLoading] = useState(true);
 
-  let planId = 0;
+  const {planId, updateCurrentPlanId} = useContext(PlanContext)
+
+  // let planId = 0;
 
   if (route.params != undefined) {
     planId = route.params.planId;
@@ -28,7 +32,8 @@ const ViewPlan = ({ route, navigation }) => {
     await getItems(viewPlan).then((data) => {
       setPlan(data);
       setLoading(false);
-      //console.log(data)
+      updateCurrentPlanId(data.plan_id)
+      //console.log(data.plan_id)
     });
   };
 

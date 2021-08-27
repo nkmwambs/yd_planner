@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import {
     Text,
@@ -21,11 +21,14 @@ import Endpoints from '../../Constants/Endpoints';
 import DateTimePickerInput from '../Components/DateTimePickerInput'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { PlanContext } from '../../Context/PlanContext';
 
 
 
 const AddTask = ({ route, navigation }) => {
-    const { goal_id } = route.params;
+    // const { goal_id, planId } = route.params;
+
+    const {planId, goalId} = useContext(PlanContext)
 
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
@@ -77,7 +80,7 @@ const AddTask = ({ route, navigation }) => {
 
     const getGoal = async () => {
 
-        await fetch(Endpoints.goal + goal_id, {
+        await fetch(Endpoints.goal + goalId, {
 
             method: "get",
             headers: {
@@ -184,7 +187,7 @@ const AddTask = ({ route, navigation }) => {
                         task_description: taskDescription,
                         task_start_date: mySQLformatDate(taskStartDate),
                         task_end_date: mySQLformatDate(taskEndDate),
-                        goal_id: goal_id,
+                        goal_id: goalId,
                         task_type_id: taskTypeId,
                         user_id: user_id,
                         task_status: 0,
@@ -204,7 +207,7 @@ const AddTask = ({ route, navigation }) => {
                     }
                     formBody = formBody.join('&');
 
-                    await fetch(Endpoints.add_task + goal_id, {
+                    await fetch(Endpoints.add_task + goalId, {
                         method: 'POST',
                         body: formBody,
                         headers: {
@@ -222,7 +225,7 @@ const AddTask = ({ route, navigation }) => {
                             // If server response message same as Data Matched
                             //if (responseJson.status === 'success') {
                             //setIsRegistraionSuccess(true);
-                            navigation.navigate("ListGoals")
+                            navigation.navigate("ListTasks")
                             // console.log(
                             //     'Task Submitted Successfully'
                             // );
@@ -267,7 +270,7 @@ const AddTask = ({ route, navigation }) => {
             >
                 <KeyboardAvoidingView enabled>
                     <TaskHeader
-                        goalId={goal_id}
+                        goalId={goalId}
                         goalStartDate={goalStartDate}
                         goalEndDate={goalEndDate}
                         goalName={goalName}

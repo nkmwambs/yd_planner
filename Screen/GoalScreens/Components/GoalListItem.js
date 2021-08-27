@@ -1,19 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { View, TouchableOpacity } from 'react-native'
+import React, { useContext } from 'react';
+import { Alert, TouchableOpacity } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import Colors from '../../../Constants/Colors';
+import { PlanContext } from '../../../Context/PlanContext';
 import ContentRow from './ContentRow';
 
 
-const GoalListItem = ({ goal, planId }) => {
+const GoalListItem = ({ goal }) => {
 
     const navigation = useNavigation()
+    const {updateCurrentGoalId} = useContext(PlanContext)
 
     return (
-        <TouchableOpacity
-            onPress={() => navigation.navigate("ViewGoal",{goalId:goal.goal_id, planId: planId})}
-        >
             <ListItem
                 key={goal.goal_id}
                 bottomDivider
@@ -26,6 +25,36 @@ const GoalListItem = ({ goal, planId }) => {
                         borderWidth: 2,
                     }
                 }
+                onPress={() => {
+                    updateCurrentGoalId(goal.goal_id)
+                    navigation.navigate("ViewGoal")
+                }}
+                onLongPress={() => {
+                    Alert.alert(
+                        "Confirmation",
+                        "Please choose the action to perform",
+                        [
+                            {
+                                text: "Add Task",
+                                onPress: () => {
+                                    alert("Feature under construction")
+                                    //navigation.navigate("AddTask", { goal_id: props.goalId });
+                                }
+                            },
+                            {
+                                text: 'Edit Goal',
+                                onPress: () => { 
+                                    alert("Feature under construction")
+                                    //navigation.navigate("EditGoal", { goalId: props.goalId }) 
+                                }
+                            },
+                            {
+                                text: "Cancel",
+                                onPress: () => null
+                            }
+                        ]
+                    );
+                }}
             >
 
                 <ListItem.Content>
@@ -46,7 +75,7 @@ const GoalListItem = ({ goal, planId }) => {
                     {/* </View> */}
                 </ListItem.Content>
             </ListItem>
-        </TouchableOpacity>
+
     )
 }
 

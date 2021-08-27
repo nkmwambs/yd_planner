@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Icon } from 'react-native-elements'
 import {
     View,
@@ -26,16 +26,18 @@ import FloatActionButton from '../Components/FloatActionButton'
 import TaskNoteListItem from '../GoalScreens/Components/TaskNoteListItem'
 import Loader from '../Components/Loader'
 import NoteSlider from './Components/NoteSlider'
+import { PlanContext } from "../../Context/PlanContext";
 
 
 const ViewTask = ({ route, navigation }) => {
 
-    const { task_id } = route.params;
+    // const { task_id } = route.params;
+    const {taskId} = useContext(PlanContext)
     const [taskNotes, setTaskNotes] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const getTaskNotes = async () => {
-        await fetch(Endpoints.task_notes + task_id, {
+        await fetch(Endpoints.task_notes + taskId, {
 
             method: "get",
             headers: {
@@ -84,7 +86,7 @@ const ViewTask = ({ route, navigation }) => {
 
             <View style={styles.taksDetails}>
                 <View>
-                    <UpdateTaskHeader taskId={task_id} />
+                    <UpdateTaskHeader />
                 </View>
             </View >
 

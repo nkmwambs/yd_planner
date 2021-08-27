@@ -1,82 +1,62 @@
-import React, { useState, useEffect } from "react";
-import {
-    View,
-    StyleSheet,
-    Text
-} from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import { View, StyleSheet, Text } from "react-native";
 
-import Colors from '../../../Constants/Colors'
-import Endpoints from '../../../Constants/Endpoints'
-import Strings from '../../../Constants/Strings/en'
-import LoadingIndicator from '../../Components/LoadingIndicator'
-import TaskCard from './TaskCard'
+import Colors from "../../../Constants/Colors";
+import Endpoints from "../../../Constants/Endpoints";
+import Strings from "../../../Constants/Strings/en";
+import LoadingIndicator from "../../Components/LoadingIndicator";
+import TaskCard from "./TaskCard";
 
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation } from "@react-navigation/native";
+import { PlanContext } from "../../../Context/PlanContext";
 
+const UpdateTaskHeader = () => {
+  const { taskId } = useContext(PlanContext);
+  const [taskTitle, setTaskTitle] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [taskState, setTaskState] = useState(0);
+  const [taskType, setTaskType] = useState("");
+  const [taskStartDate, setTaskStartDate] = useState("");
+  const [taskEndDate, setTaskEndDate] = useState("");
+  const [loading, setLoading] = useState(false);
 
-const UpdateTaskHeader = (props) => {
+  const navigation = useNavigation();
 
-    const [taskTitle, setTaskTitle] = useState('');
-    const [taskDescription, setTaskDescription] = useState('');
-    const [taskState, setTaskState] = useState(0);
-    const [taskType, setTaskType] = useState('')
-    const [taskStartDate, setTaskStartDate] = useState('');
-    const [taskEndDate, setTaskEndDate] = useState('');
-    const [loading, setLoading] = useState(false);
+  const getTask = async () => {
+    await getItems(Endpoints.task + taskId).then((data) => {
+      //console.log(taskId);
+      setTaskTitle(data.task_name);
+      setTaskDescription(data.task_description);
+      setTaskState(data.task_status);
+      setTaskType(data.task_type_name);
+      setTaskStartDate(data.task_start_date);
+      setTaskEndDate(data.task_end_date);
 
-    const navigation = useNavigation();
+      setLoading(false);
+    });
+    
+  };
 
-    const getTask = async () => {
+  useEffect(() => {
+    getTask();
+  }, [navigation]);
 
-        await fetch(Endpoints.task + props.taskId, {
-
-            method: "get",
-            headers: {
-                'Content-Type':
-                    'application/x-www-form-urlencoded;charset=UTF-8',
-            }
-        })
-            .then((response) => response.json())
-            .then((json) => {
-                setTaskTitle(json.data.task_name);
-                setTaskDescription(json.data.task_description);
-                setTaskState(json.data.task_status);
-                setTaskType(json.data.task_type_name);
-                setTaskStartDate(json.data.task_start_date);
-                setTaskEndDate(json.data.task_end_date);
-
-                //console.log(json.data);
-
-                setLoading(false);
-            })
-            .catch((error) => console.error(error))
-
-    };
-
-    useEffect(() => {
-        getTask();
-    }, [navigation])
-
-
-    return (
-        <View style={{ marginTop: -10 }}>
-            {
-                loading
-                    ?
-                    <LoadingIndicator animating={loading} />
-                    :
-                    <TaskCard
-                        taskTitle={taskTitle}
-                        taskDescription={taskDescription}
-                        taskState={taskState}
-                        taskType={taskType}
-                        taskStartDate={taskStartDate}
-                        taskEndDate={taskEndDate}
-                        taskId={props.taskId}
-                    />
-            }
-        </View>
-    )
-}
+  return (
+    <View style={{ marginTop: -10 }}>
+      {loading ? (
+        <LoadingIndicator animating={loading} />
+      ) : (
+        <TaskCard
+          taskTitle={taskTitle}
+          taskDescription={taskDescription}
+          taskState={taskState}
+          taskType={taskType}
+          taskStartDate={taskStartDate}
+          taskEndDate={taskEndDate}
+        />
+      )}
+    </View>
+  );
+};
 
 export default UpdateTaskHeader;

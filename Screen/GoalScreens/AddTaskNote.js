@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { TextInput, StyleSheet, View, TouchableOpacity, Dimensions } from 'react-native'
 import styled from "styled-components";
 import Colors from '../../Constants/Colors'
@@ -6,11 +6,12 @@ import { Icon } from 'react-native-elements'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../Components/Loader'
 import Endpoints from '../../Constants/Endpoints'
+import { PlanContext } from '../../Context/PlanContext';
 
 const AddTaskNote = ({ route, navigation }) => {
 
-    const { task_id } = route.params;
-
+    // const { task_id } = route.params;
+    const {taskId} = useContext(PlanContext)
     const [task_note, setNote] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -26,7 +27,7 @@ const AddTaskNote = ({ route, navigation }) => {
 
         var dataToSend = {
             task_note: task_note,
-            task_id: task_id,
+            task_id: taskId,
             task_note_created_by: user_id,
             task_note_last_modified_by: user_id,
             task_note_created_date: new Date().toISOString().slice(0, 10),
@@ -60,7 +61,7 @@ const AddTaskNote = ({ route, navigation }) => {
                 // If server response message same as Data Matched
                 if (responseJson.status === 'success') {
 
-                    navigation.navigate("ViewTask", { task_id: task_id })
+                    navigation.navigate("ViewTask")
 
                 } else {
                     setErrortext(responseJson.msg);

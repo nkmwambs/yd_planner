@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity, Dimensions } from "react-native";
 import { ListItem, Avatar, Card } from 'react-native-elements'
 
@@ -7,14 +7,19 @@ import Strings from '../../../Constants/Strings/en'
 import { useNavigation } from '@react-navigation/native';
 
 import Loader from '../../Components/Loader'
+import { PlanContext } from '../../../Context/PlanContext';
 
 const TaskListItem = (props) => {
 
     const navigation = useNavigation();
+    const {updateCurrentTaskId} = useContext(PlanContext)
 
 
     return (
-        <TouchableOpacity onPress={() => { navigation.navigate("ViewTask", { task_id: props.itemId }) }}>
+        <TouchableOpacity onPress={() => { 
+            updateCurrentTaskId(props.itemId)
+            navigation.navigate("ViewTask") 
+            }}>
 
             <ListItem
                 containerStyle={{ marginBottom: 5 }}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text } from "react-native";
 import getItems from "../../Functions/getItems";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -6,14 +6,15 @@ import Loader from "../Components/Loader";
 import Endpoints from "../../Constants/Endpoints";
 import PlannerView from "../Components/PlannerView";
 import EmptyPlaceholder from '../Components/EmptyPlaceholder'
+import { PlanContext } from "../../Context/PlanContext";
 
 const ViewGoal = ({ route, navigation }) => {
   const [goal, setGoal] = useState({});
   const [loading, setLoading] = useState(true);
 
-
-  const goalId = route.params.goalId;
-  const planId = route.params.planId;
+  const {planId, goalId} = useContext(PlanContext)
+  // const goalId = route.params.goalId;
+  // const planId = route.params.planId;
 
   const getGoal = async () => {
     
@@ -108,7 +109,7 @@ const ViewGoal = ({ route, navigation }) => {
         showNavButtons={true}
         onLeftbackPress={() => navigation.navigate("ListGoals", {planId: planId})}
         onRightButtonPress={() =>
-          navigation.navigate("ListTasks", { goalId: goal.goal_id })
+          navigation.navigate("ListTasks", { goalId: goal.goal_id,planId: planId })
         }
         leftButtonTitle="All Goals"
         rightButtonTitle="Goal Tasks"

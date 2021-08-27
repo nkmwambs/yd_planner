@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native'
+import { Alert, TouchableOpacity } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import Colors from '../../../Constants/Colors';
 import ContentRow from './ContentRow';
@@ -11,9 +11,7 @@ const PlanListItem = ({ plan }) => {
     const navigation = useNavigation()
 
     return (
-        <TouchableOpacity
-            onPress={() => navigation.navigate("ViewPlan",{planId:plan.plan_id})}
-        >
+        
             <ListItem
                 key={plan.plan_id}
                 bottomDivider
@@ -26,6 +24,33 @@ const PlanListItem = ({ plan }) => {
                         borderWidth: 2,
                     }
                 }
+                onPress={() => navigation.navigate("ViewPlan",{planId:plan.plan_id})}
+                onLongPress={() => {
+                    Alert.alert(
+                        "Confirmation",
+                        "Please choose the action to perform",
+                        [
+                            {
+                                text: "Add a Goal",
+                                onPress: () => {
+                                    alert("Feature under construction")
+                                    //navigation.navigate("AddTask", { goal_id: props.goalId });
+                                }
+                            },
+                            {
+                                text: 'Edit Plan',
+                                onPress: () => { 
+                                    alert("Feature under construction")
+                                    //navigation.navigate("EditGoal", { goalId: props.goalId }) 
+                                }
+                            },
+                            {
+                                text: "Cancel",
+                                onPress: () => null
+                            }
+                        ]
+                    );
+                }}
             >
 
                 <ListItem.Content>
@@ -46,7 +71,7 @@ const PlanListItem = ({ plan }) => {
                     {/* </View> */}
                 </ListItem.Content>
             </ListItem>
-        </TouchableOpacity>
+
     )
 }
 

@@ -47,19 +47,19 @@ const TaskCard = (props) => {
                     <Button
                         title="Add Note"
                         containerStyle={{ paddingRight: 5 }}
-                        onPress={() => navigation.navigate("AddtaskNote", { task_id: props.taskId })}
+                        onPress={() => navigation.navigate("AddtaskNote")}
                         buttonStyle={{ backgroundColor: "green" }}
                     />
 
-                    <Button
+                    {/* <Button
                         onPress={() => null}
                         title="Edit Task"
                         containerStyle={{ paddingRight: 5 }}
-                    />
+                    /> */}
 
                     <Button
-                        onPress={() => null}
-                        title="Delete Task"
+                        onPress={() => alert("Feature not implemented")}
+                        title="Mark Complete"
                         containerStyle={{ paddingRight: 5 }}
                         buttonStyle={{ backgroundColor: "red" }}
                     />

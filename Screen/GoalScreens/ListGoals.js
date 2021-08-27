@@ -4,9 +4,9 @@ import Loader from '../Components/Loader'
 import FloatActionButton from '../Components/FloatActionButton'
 import Endpoints from '../../Constants/Endpoints'
 import GoalListItem from './Components/GoalListItem'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import getItems from '../../Functions/getItems'
 import { GlobalContext } from '../../Context/GlobalContext'
+import { PlanContext } from '../../Context/PlanContext'
 
 
 const ListPlans = ({ route, navigation }) => {
@@ -15,7 +15,8 @@ const ListPlans = ({ route, navigation }) => {
     const [loading, setLoading] = useState(true);
     const {theme} = useContext(GlobalContext)
 
-    const { planId } = route.params;
+    const {planId} = useContext(PlanContext)
+    //const { planId } = route.params;
 
     const getGoals = async () => {
 
@@ -41,9 +42,9 @@ const ListPlans = ({ route, navigation }) => {
 
     const renderItem = ({ item }) => {
         return (
+
             <GoalListItem
                 goal={item}
-                planId={planId}
             />
 
         )
