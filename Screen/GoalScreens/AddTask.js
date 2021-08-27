@@ -161,8 +161,8 @@ const AddTask = ({ route, navigation }) => {
         }
 
         if (
-            new Date(goalStartDate) > taskStartDate || new Date(goalStartDate) > taskEndDate ||
-            new Date(goalEndDate) < taskStartDate || new Date(goalEndDate) < taskEndDate
+            new Date(goalStartDate) >= taskStartDate || new Date(goalStartDate) >= taskEndDate ||
+            new Date(goalEndDate) <= taskStartDate || new Date(goalEndDate) <= taskEndDate
         ) {
             alert("The task should be within the goal timeframe");
             return;

@@ -29,9 +29,9 @@ const AddGoal = ({ route, navigation }) => {
   const [goalDescription, setGoalDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const { planId } = route.params;
+  //const { planId } = route.params;
 
-  const { start_date: goalStartDate, end_date: goalEndDate } =
+  const { start_date: goalStartDate, end_date: goalEndDate, updateCurrentGoalId, planId } =
     useContext(PlanContext);
 
   //const navigation = useNavigation();
@@ -158,7 +158,7 @@ const AddGoal = ({ route, navigation }) => {
               // If server response message same as Data Matched
               if (responseJson.status === "success") {
                 //setIsRegistraionSuccess(true);
-                //const response_goal_id = responseJson.data["goal_id"];
+                const response_goal_id = responseJson.data["goal_id"];
                 // navigation.navigate("ListTasks", {
                 //   goal_id: response_goal_id,
                 //   isGoalAddFormInStack: true,
@@ -166,8 +166,8 @@ const AddGoal = ({ route, navigation }) => {
                 // console.log(
                 //     'Goal Submitted Successfully'
                 // );
-
-                navigation.navigate("ListGoals",{planId: planId})
+                updateCurrentGoalId(response_goal_id)
+                navigation.navigate("ListTasks")
               } else {
                 //setErrortext(responseJson.msg);
               }

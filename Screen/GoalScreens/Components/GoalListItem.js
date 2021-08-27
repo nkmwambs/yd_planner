@@ -37,7 +37,8 @@ const GoalListItem = ({ goal }) => {
                             {
                                 text: "Add Task",
                                 onPress: () => {
-                                    alert("Feature under construction")
+                                    updateCurrentGoalId(goal.goal_id)
+                                    navigation.navigate("AddTask")
                                     //navigation.navigate("AddTask", { goal_id: props.goalId });
                                 }
                             },
