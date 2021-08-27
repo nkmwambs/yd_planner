@@ -7,26 +7,20 @@ import Endpoints from "../../Constants/Endpoints";
 import PlannerView from "../Components/PlannerView";
 import EmptyPlaceholder from '../Components/EmptyPlaceholder'
 
-const ViewPlan = ({ route, navigation }) => {
-  const [plan, setPlan] = useState({});
+const ViewGoal = ({ route, navigation }) => {
+  const [goal, setGoal] = useState({});
   const [loading, setLoading] = useState(true);
 
-  let planId = 0;
 
-  if (route.params != undefined) {
-    planId = route.params.planId;
-  }
+  const goalId = route.params.goalId;
+  const planId = route.params.planId;
 
-  const getPlan = async () => {
-    const user_id = await AsyncStorage.getItem("user_id");
-    let viewPlan = Endpoints.active_plan + user_id;
+  const getGoal = async () => {
+    
+    const viewGoal = Endpoints.get_goal + goalId;
 
-    if (planId > 0) {
-      viewPlan = Endpoints.get_plan + planId;
-    }
-
-    await getItems(viewPlan).then((data) => {
-      setPlan(data);
+    await getItems(viewGoal).then((data) => {
+      setGoal(data);
       setLoading(false);
       //console.log(data)
     });
@@ -34,7 +28,7 @@ const ViewPlan = ({ route, navigation }) => {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      getPlan();
+      getGoal();
     });
 
     return () => {
@@ -47,15 +41,15 @@ const ViewPlan = ({ route, navigation }) => {
     return typeof obj == "object" && obj != null;
   };
 
-  if (!is_valid_object(plan)) {
+  if (!is_valid_object(goal)) {
     return (
       <View>
         <Loader loading={loading} />
         <EmptyPlaceholder
-          placeholderText="You have no Plans Created"
-          buttonLabel = "Add a Plan"
+          placeholderText="You have no Goals Created"
+          buttonLabel = "Add a Goal"
           onClickHandler={() => {
-            navigation.navigate("AddPlan");
+            navigation.navigate("AddGoal",{planId:planId});
           }}
         />
         
@@ -65,25 +59,25 @@ const ViewPlan = ({ route, navigation }) => {
 
   const DATA = [
     {
-      title: "Plan Description",
+      title: "Goal Description",
       rows: [
         [
-          { title: "Title", value: plan.plan_name },
+          { title: "Title", value: goal.goal_name },
           {
             title: "Status",
-            value: plan.plan_status == 1 ? "Active" : "Closed",
+            value: "New",
           },
         ],
         [
-          { title: "Start Date", value: plan.plan_start_date },
-          { title: "End Date", value: plan.plan_end_date },
+          { title: "Start Date", value: goal.goal_start_date },
+          { title: "End Date", value: goal.goal_end_date },
         ],
         [
           {
             title: "Owner",
-            value: plan.user_first_name + " " + plan.user_last_name,
+            value: goal.user_first_name + " " + goal.user_last_name,
           },
-          { title: "Created On", value: plan.plan_created_date },
+          { title: "Created On", value: goal.goal_created_date },
         ],
       ],
     },
@@ -101,7 +95,7 @@ const ViewPlan = ({ route, navigation }) => {
       ],
     },
     {
-      title: "Goals shared to you",
+      title: "Tasks shared to you",
       rows: [],
     },
   ];
@@ -112,15 +106,15 @@ const ViewPlan = ({ route, navigation }) => {
       <PlannerView
         data={DATA}
         showNavButtons={true}
-        onLeftbackPress={() => navigation.navigate("ListPlans")}
+        onLeftbackPress={() => navigation.navigate("ListGoals", {planId: planId})}
         onRightButtonPress={() =>
-          navigation.navigate("ListGoals", { planId: plan.plan_id })
+          navigation.navigate("ListTasks", { goalId: goal.goal_id })
         }
-        leftButtonTitle="All Plans"
-        rightButtonTitle="Plan Goals"
+        leftButtonTitle="All Goals"
+        rightButtonTitle="Goal Tasks"
       />
     </View>
   );
 };
 
-export default ViewPlan;
+export default ViewGoal;

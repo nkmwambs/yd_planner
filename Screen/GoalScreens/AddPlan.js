@@ -11,21 +11,20 @@ import PlannerDatePicker from '../Components/PlannerDatePicker'
 import PlannerButton from '../Components/PlannerButton'
 import { GlobalContext } from '../../Context/GlobalContext'
 import { PlanContext } from '../../Context/PlanContext'
-import {PlanProvider} from '../../Context/PlanContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Endpoints from '../../Constants/Endpoints'
 import { useNavigation } from '@react-navigation/native';
 
+// const AddPlan = () => {
+
+//     return (
+//         <PlanProvider>
+//             <NewPlan />
+//         </PlanProvider>
+//     )
+// }
+
 const AddPlan = () => {
-
-    return (
-        <PlanProvider>
-            <NewPlan />
-        </PlanProvider>
-    )
-}
-
-const NewPlan = () => {
 
     const [loading, setLoading] = useState(false)
     const [planTitle, setPlanTitle] = useState('')
@@ -71,8 +70,6 @@ const NewPlan = () => {
                         plan_start_date: start_date,
                         plan_end_date: end_date,
                         user_id: user_id,
-                        plan_last_modified_by: user_id,
-                        plan_created_by: user_id
                     };
 
                     //console.log(dataToSend);

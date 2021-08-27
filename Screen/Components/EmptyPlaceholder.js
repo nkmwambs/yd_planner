@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   Dimensions,
-  TouchableOpacity,
 } from "react-native";
 import { Button, Icon } from "react-native-elements";
 
@@ -16,7 +15,7 @@ const EmptyPlaceholder = (props) => {
       </Text>
 
       <Button
-        icon={<Icon type="font-awesome" name="plus" color="#ffffff" />}
+        icon={<Icon type="font-awesome" name="plus" color="#ffffff" size={15} />}
         onPress={props.onClickHandler}
         buttonStyle={{
           borderRadius: 0,
@@ -25,7 +24,7 @@ const EmptyPlaceholder = (props) => {
           marginBottom: 0,
           marginTop:30,
         }}
-        title=" Add Item"
+        title={" "+props.buttonLabel}
       />
     </View>
   );
@@ -35,13 +34,10 @@ export default EmptyPlaceholder;
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
+    flex: 1,
     backgroundColor: "white",
-    // paddingLeft: 5,
-    // paddingRight: 5,
-    // marginTop: 10,
     height: Dimensions.get("window").height,
     alignItems: "center",
-    paddingTop: 50,
+    justifyContent:"center",
   },
 });

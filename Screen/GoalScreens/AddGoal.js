@@ -1,40 +1,27 @@
 import React, { useState, useEffect, useContext } from "react";
 
 import {
-  Text,
   StyleSheet,
   View,
   KeyboardAvoidingView,
   ScrollView,
-  TouchableOpacity,
   Alert,
 } from "react-native";
 
 import { Picker } from "@react-native-picker/picker";
 import Loader from "../Components/Loader";
-import DateInput from "../Components/DateInput";
 import GoalTextInput from "./Components/GoalTextInput";
 import GoalPicker from "./Components/GoalPicker";
 import Endpoints from "../../Constants/Endpoints";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { PlanContext, PlanProvider } from "../../Context/PlanContext";
+import { PlanContext } from "../../Context/PlanContext";
 
 import PlannerDatePicker from "../Components/PlannerDatePicker";
 import PlannerButton from "../Components/PlannerButton";
-import { useNavigation } from "@react-navigation/native";
+// import { useNavigation } from "@react-navigation/native";
 
 const AddGoal = ({ route, navigation }) => {
-  const { planId } = route.params;
-
-  return (
-    <PlanProvider>
-      <NewGoal planId={planId} />
-    </PlanProvider>
-  );
-};
-
-const NewGoal = ({ planId }) => {
   const [goalThemeId, setGoalThemeId] = useState(0);
   const [goalTheme, setGoalTheme] = useState("");
   const [themeDetails, setthemeDetails] = useState([]);
@@ -42,14 +29,16 @@ const NewGoal = ({ planId }) => {
   const [goalDescription, setGoalDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { planId } = route.params;
+
   const { start_date: goalStartDate, end_date: goalEndDate } =
     useContext(PlanContext);
 
-  const navigation = useNavigation();
+  //const navigation = useNavigation();
 
   useEffect(() => {
     getThemes();
-  },[planId]);
+  },[navigation]);
 
   const getThemes = async () => {
     fetch(Endpoints.themes, {
@@ -169,14 +158,16 @@ const NewGoal = ({ planId }) => {
               // If server response message same as Data Matched
               if (responseJson.status === "success") {
                 //setIsRegistraionSuccess(true);
-                const response_goal_id = responseJson.data["goal_id"];
-                navigation.navigate("ListTasks", {
-                  goal_id: response_goal_id,
-                  isGoalAddFormInStack: true,
-                });
+                //const response_goal_id = responseJson.data["goal_id"];
+                // navigation.navigate("ListTasks", {
+                //   goal_id: response_goal_id,
+                //   isGoalAddFormInStack: true,
+                // });
                 // console.log(
                 //     'Goal Submitted Successfully'
                 // );
+
+                navigation.navigate("ListGoals",{planId: planId})
               } else {
                 //setErrortext(responseJson.msg);
               }
@@ -199,6 +190,7 @@ const NewGoal = ({ planId }) => {
   };
 
   return (
+
     <View style={{ flex: 1 }}>
       <Loader loading={loading} />
       <ScrollView
@@ -251,6 +243,7 @@ const NewGoal = ({ planId }) => {
         </KeyboardAvoidingView>
       </ScrollView>
     </View>
+
   );
 };
 const styles = StyleSheet.create({
