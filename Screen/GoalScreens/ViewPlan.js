@@ -15,17 +15,14 @@ const ViewPlan = ({ route, navigation }) => {
 
   const {planId, updateCurrentPlanId} = useContext(PlanContext)
 
-  // let planId = 0;
-
-  if (route.params != undefined) {
-    planId = route.params.planId;
-  }
+  //console.log(route)
+  //console.log(planId)
 
   const getPlan = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
     let viewPlan = Endpoints.active_plan + user_id;
 
-    if (planId > 0) {
+    if(planId > 0){
       viewPlan = Endpoints.get_plan + planId;
     }
 
@@ -38,15 +35,15 @@ const ViewPlan = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+    //const unsubscribe = navigation.addListener("focus", () => {
       getPlan();
-    });
+    //});
 
-    return () => {
+    //return () => {
       // Unsubscribe for the focus Listener
-      unsubscribe;
-    };
-  });
+      //unsubscribe;
+    //};
+  },[navigation, planId]);
 
   const is_valid_object = (obj) => {
     return typeof obj == "object" && obj != null;

@@ -2,7 +2,7 @@
 // https://aboutreact.com/react-native-login-and-signup/
 
 // Import React and Component
-import React, { useState, createRef, useEffect } from 'react';
+import React, { useState, createRef, useEffect, useContext } from 'react';
 import {
     StyleSheet,
     TextInput,
@@ -22,6 +22,7 @@ import Strings from '../../Constants/Strings/en'
 import Endpoints from '../../Constants/Endpoints';
 
 import NetInfo from "@react-native-community/netinfo";
+import { GlobalContext } from '../../Context/GlobalContext';
 
 const LoginScreen = ({ navigation }) => {
     const [userEmail, setUserEmail] = useState('');
@@ -29,6 +30,8 @@ const LoginScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const [errortext, setErrortext] = useState('');
     const [connected, setConnected] = useState(false);
+
+    const {registerUserId} = useContext(GlobalContext)
 
     const passwordInputRef = createRef();
 
@@ -82,7 +85,8 @@ const LoginScreen = ({ navigation }) => {
                 if (responseJson.status === 'success') {
                     AsyncStorage.setItem('user_id', responseJson.data.user_id);
                     AsyncStorage.setItem('user_name', responseJson.data.user_name);
-                    console.log(responseJson.data.email);
+                    //console.log(responseJson.data.email);
+                    registerUserId(responseJson.data.user_id)
                     navigation.replace('MainDrawerNavigator');
                 } else {
                     //setErrortext(responseJson.msg);

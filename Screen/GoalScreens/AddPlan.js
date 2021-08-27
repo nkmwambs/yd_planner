@@ -30,7 +30,7 @@ const AddPlan = () => {
     const [planTitle, setPlanTitle] = useState('')
 
     const {theme} = useContext(GlobalContext)
-    const {start_date, end_date} = useContext(PlanContext)
+    const {start_date, end_date, updateCurrentPlanId} = useContext(PlanContext)
 
     const navigation = useNavigation();
 
@@ -101,7 +101,8 @@ const AddPlan = () => {
                             if (responseJson.status === 'success') {
                                 //setIsRegistraionSuccess(true);
                                 const response_plan_id = responseJson.data["plan_id"];
-                                navigation.navigate("ListGoals", { plan_id: response_plan_id })
+                                updateCurrentPlanId(response_plan_id);
+                                navigation.navigate("ListGoals")
                                 // console.log(
                                 //     'Goal Submitted Successfully'
                                 // );

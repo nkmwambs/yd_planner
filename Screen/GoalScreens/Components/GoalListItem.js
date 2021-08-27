@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useContext } from 'react';
-import { Alert, TouchableOpacity } from 'react-native'
+import { Alert, View, Text } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import Colors from '../../../Constants/Colors';
 import { PlanContext } from '../../../Context/PlanContext';
@@ -59,7 +59,15 @@ const GoalListItem = ({ goal }) => {
 
                 <ListItem.Content>
                     <ListItem.Title>
-                        {goal.goal_name}
+                        <View 
+                        style={{
+                            borderBottomColor:'black',
+                            borderBottomWidth:1, 
+                            borderStyle:'solid',
+                            width:'100%',
+                            }}>
+                            <Text>{goal.goal_name}</Text>
+                            </View>
                     </ListItem.Title>
 
                     {/* <View style={{ paddingTop: 5 }}> */}

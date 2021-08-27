@@ -1,14 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { Alert, TouchableOpacity } from 'react-native'
+import React, { useContext } from 'react';
+import { Alert, View, Text } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import Colors from '../../../Constants/Colors';
+import { PlanContext } from '../../../Context/PlanContext';
 import ContentRow from './ContentRow';
 
 
 const PlanListItem = ({ plan }) => {
 
     const navigation = useNavigation()
+    const {updateCurrentPlanId} = useContext(PlanContext)
 
     return (
         
@@ -24,7 +26,11 @@ const PlanListItem = ({ plan }) => {
                         borderWidth: 2,
                     }
                 }
-                onPress={() => navigation.navigate("ViewPlan",{planId:plan.plan_id})}
+                onPress={() => {
+                    //console.log(plan.plan_id)
+                    updateCurrentPlanId(plan.plan_id);
+                    navigation.navigate("ViewPlan",{origin_route: "ListPlans"});
+                }}
                 onLongPress={() => {
                     Alert.alert(
                         "Confirmation",
@@ -55,7 +61,16 @@ const PlanListItem = ({ plan }) => {
 
                 <ListItem.Content>
                     <ListItem.Title>
-                        {plan.plan_name}
+                        
+                        <View 
+                        style={{
+                            borderBottomColor:'black',
+                            borderBottomWidth:1, 
+                            borderStyle:'solid',
+                            width:'100%',
+                            }}>
+                            <Text>{plan.plan_name}</Text>
+                            </View>
                     </ListItem.Title>
 
                     {/* <View style={{ paddingTop: 5 }}> */}
