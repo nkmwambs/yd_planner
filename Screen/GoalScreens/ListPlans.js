@@ -47,7 +47,7 @@ const ListPlans = ({ navigation }) => {
 
         )
     }
-
+    
 
     return (
         <View style={[styles.container,{backgroundColor:theme.listContentBackgroundColor}]}>

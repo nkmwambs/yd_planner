@@ -44,15 +44,18 @@ const ViewGoal = ({ route, navigation }) => {
 
   if (!is_valid_object(goal)) {
     return (
-      <View>
-        <Loader loading={loading} />
-        <EmptyPlaceholder
+      <View style={[{flex:1},{backgroundColor:theme.listContentBackgroundColor}]}>
+        {
+          loading ? <Loader loading={loading} /> : <EmptyPlaceholder
           placeholderText="You have no Goals Created"
           buttonLabel = "Add a Goal"
           onClickHandler={() => {
             navigation.navigate("AddGoal",{planId:planId});
           }}
         />
+        }
+        
+        
         
       </View>
     );
@@ -103,8 +106,8 @@ const ViewGoal = ({ route, navigation }) => {
 
   return (
     <View>
-      <Loader loading={loading} />
-      <PlannerView
+      {
+        loading ? <Loader loading={loading} /> : <PlannerView
         data={DATA}
         showNavButtons={true}
         onLeftbackPress={() => navigation.navigate("ListGoals", {planId: planId})}
@@ -114,6 +117,9 @@ const ViewGoal = ({ route, navigation }) => {
         leftButtonTitle="All Goals"
         rightButtonTitle="Goal Tasks"
       />
+      }
+      
+      
     </View>
   );
 };

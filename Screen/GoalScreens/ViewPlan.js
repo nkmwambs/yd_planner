@@ -7,6 +7,7 @@ import Endpoints from "../../Constants/Endpoints";
 import PlannerView from "../Components/PlannerView";
 import EmptyPlaceholder from '../Components/EmptyPlaceholder'
 import { PlanContext } from "../../Context/PlanContext";
+import { GlobalContext } from "../../Context/GlobalContext";
 
 
 const ViewPlan = ({ route, navigation }) => {
@@ -14,6 +15,7 @@ const ViewPlan = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
 
   const {planId, updateCurrentPlanId} = useContext(PlanContext)
+  const {theme} = useContext(GlobalContext)
 
   //console.log(route)
   //console.log(planId)
@@ -29,8 +31,8 @@ const ViewPlan = ({ route, navigation }) => {
     await getItems(viewPlan).then((data) => {
       setPlan(data);
       setLoading(false);
-      updateCurrentPlanId(data.plan_id)
-      //console.log(data.plan_id)
+      updateCurrentPlanId(is_valid_object(data) ? data.plan_id : 0)
+      
     });
   };
 
@@ -51,15 +53,18 @@ const ViewPlan = ({ route, navigation }) => {
 
   if (!is_valid_object(plan)) {
     return (
-      <View>
-        <Loader loading={loading} />
-        <EmptyPlaceholder
+      <View style={[{flex:1},{backgroundColor:theme.listContentBackgroundColor}]}>
+        {
+          loading ? <Loader loading={loading} /> : <EmptyPlaceholder
           placeholderText="You have no Plans Created"
           buttonLabel = "Add a Plan"
           onClickHandler={() => {
             navigation.navigate("AddPlan");
           }}
         />
+        }
+        
+        
         
       </View>
     );
@@ -109,9 +114,9 @@ const ViewPlan = ({ route, navigation }) => {
   ];
 
   return (
-    <View>
-      <Loader loading={loading} />
-      <PlannerView
+    <View  style={[{flex:1},{backgroundColor:theme.listContentBackgroundColor}]}>
+      {
+        loading ? <Loader loading={loading} /> : <PlannerView
         data={DATA}
         showNavButtons={true}
         onLeftbackPress={() => navigation.navigate("ListPlans")}
@@ -121,6 +126,9 @@ const ViewPlan = ({ route, navigation }) => {
         leftButtonTitle="All Plans"
         rightButtonTitle="Plan Goals"
       />
+      }
+      
+      
     </View>
   );
 };

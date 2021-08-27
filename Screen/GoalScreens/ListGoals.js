@@ -7,9 +7,10 @@ import GoalListItem from './Components/GoalListItem'
 import getItems from '../../Functions/getItems'
 import { GlobalContext } from '../../Context/GlobalContext'
 import { PlanContext } from '../../Context/PlanContext'
+import EmptyPlaceholder from '../Components/EmptyPlaceholder'
 
 
-const ListPlans = ({ route, navigation }) => {
+const ListGoals = ({ route, navigation }) => {
 
     const [goals, setGoals] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -23,6 +24,7 @@ const ListPlans = ({ route, navigation }) => {
         await getItems(Endpoints.goals + planId).then((data) => {
             setGoals(data)
             setLoading(false)
+            //console.log(data)
         })
 
     }
@@ -50,16 +52,37 @@ const ListPlans = ({ route, navigation }) => {
         )
     }
 
+    if(goals.length == 0){
+        return (
+            <View style={[styles.container,{backgroundColor:theme.listContentBackgroundColor}]}>
+                {
+                    loading ? <Loader loading={loading} /> : <EmptyPlaceholder
+                    placeholderText="You have no Goals Created"
+                    buttonLabel = "Add a Goal"
+                    onClickHandler={() => {
+                      navigation.navigate("AddGoal",{planId:planId});
+                    }}
+                  />
+                }
+            
+        
+        </View>
+        )
+    }
+
 
     return (
         <View style={[styles.container,{backgroundColor:theme.listContentBackgroundColor}]}>
-            <Loader loading={loading} />
-            <FlatList
+            {
+                loading ? <Loader loading={loading} /> : <FlatList
                 style={{ elevation: 1 }}
                 keyExtractor={(item) => item.goal_id}
                 data={goals}
                 renderItem={renderItem}
             />
+            }
+            
+            
 
             <FloatActionButton clickHandler={() => {
                 navigation.navigate("AddGoal", {planId: planId});
@@ -69,7 +92,7 @@ const ListPlans = ({ route, navigation }) => {
     )
 }
 
-export default ListPlans;
+export default ListGoals;
 
 const styles = StyleSheet.create({
     container: {
