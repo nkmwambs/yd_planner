@@ -35,7 +35,7 @@ const AddPlan = () => {
     const navigation = useNavigation();
 
     const onSubmitHandler = () => {
-        alert(start_date);
+        //alert(start_date);
         
         if (!planTitle) {
             alert('Please fill Plan Title');
