@@ -22,16 +22,18 @@ const UpdateTaskHeader = () => {
 
   const navigation = useNavigation();
 
+  //console.log(taskState + '+++++++++++')
+
   const getTask = async () => {
     await getItems(Endpoints.task + taskId).then((data) => {
-      //console.log(taskId);
+      //console.log(data);
       setTaskTitle(data.task_name);
       setTaskDescription(data.task_description);
       setTaskState(data.task_status);
       setTaskType(data.task_type_name);
       setTaskStartDate(data.task_start_date);
       setTaskEndDate(data.task_end_date);
-
+      //console.log(taskState)
       setLoading(false);
     });
     
@@ -39,7 +41,7 @@ const UpdateTaskHeader = () => {
 
   useEffect(() => {
     getTask();
-  }, [navigation]);
+  }, [navigation, taskState]);
 
   return (
     <View style={{ marginTop: -10 }}>

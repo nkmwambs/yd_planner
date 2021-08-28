@@ -5,47 +5,64 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loader from "../Components/Loader";
 import Endpoints from "../../Constants/Endpoints";
 import PlannerView from "../Components/PlannerView";
-import EmptyPlaceholder from '../Components/EmptyPlaceholder'
+import EmptyPlaceholder from "../Components/EmptyPlaceholder";
 import { PlanContext } from "../../Context/PlanContext";
 import { GlobalContext } from "../../Context/GlobalContext";
-
 
 const ViewPlan = ({ route, navigation }) => {
   const [plan, setPlan] = useState({});
   const [loading, setLoading] = useState(true);
 
-  const {planId, updateCurrentPlanId} = useContext(PlanContext)
-  const {theme} = useContext(GlobalContext)
+  const [dueTasksCount, setDueTasksCount] = useState(0)
+  const [goalsCount,setGoalsCount] = useState(0)
+  const [overdueTasksCount,setOverdueTasksCount] = useState(0)
+  const [tasksCount,setTasksCount] = useState(0)
+
+  const { planId, updateCurrentPlanId } = useContext(PlanContext);
+  const { theme } = useContext(GlobalContext);
 
   //console.log(route)
   //console.log(planId)
 
   const getPlan = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
+
     let viewPlan = Endpoints.active_plan + user_id;
 
-    if(planId > 0){
+    if (planId > 0) {
       viewPlan = Endpoints.get_plan + planId;
     }
 
     await getItems(viewPlan).then((data) => {
       setPlan(data);
       setLoading(false);
-      updateCurrentPlanId(is_valid_object(data) ? data.plan_id : 0)
-      
+      updateCurrentPlanId(is_valid_object(data) ? data.plan_id : 0);
     });
+  };
+
+  const getStatistics = async () => {
+    const user_id = await AsyncStorage.getItem("user_id");
+
+    await getItems(Endpoints.plan_statistics + planId + '/' + new Date().toISOString().slice(0, 10) ).then((data) => {
+        setDueTasksCount(data.count_plan_due_tasks);
+        setGoalsCount(data.count_plan_goals);
+        setOverdueTasksCount(data.count_overdue_plan_tasks);
+        setTasksCount(data.count_plan_tasks);
+    });
+
   };
 
   useEffect(() => {
     //const unsubscribe = navigation.addListener("focus", () => {
-      getPlan();
+    getPlan();
+    getStatistics()
     //});
 
     //return () => {
-      // Unsubscribe for the focus Listener
-      //unsubscribe;
+    // Unsubscribe for the focus Listener
+    //unsubscribe;
     //};
-  },[navigation, planId]);
+  }, [navigation, planId, dueTasksCount, goalsCount, overdueTasksCount, tasksCount]);
 
   const is_valid_object = (obj) => {
     return typeof obj == "object" && obj != null;
@@ -53,19 +70,23 @@ const ViewPlan = ({ route, navigation }) => {
 
   if (!is_valid_object(plan)) {
     return (
-      <View style={[{flex:1},{backgroundColor:theme.listContentBackgroundColor}]}>
-        {
-          loading ? <Loader loading={loading} /> : <EmptyPlaceholder
-          placeholderText="You have no Plans Created"
-          buttonLabel = "Add a Plan"
-          onClickHandler={() => {
-            navigation.navigate("AddPlan");
-          }}
-        />
-        }
-        
-        
-        
+      <View
+        style={[
+          { flex: 1 },
+          { backgroundColor: theme.listContentBackgroundColor },
+        ]}
+      >
+        {loading ? (
+          <Loader loading={loading} />
+        ) : (
+          <EmptyPlaceholder
+            placeholderText="You have no Plans Created"
+            buttonLabel="Add a Plan"
+            onClickHandler={() => {
+              navigation.navigate("AddPlan");
+            }}
+          />
+        )}
       </View>
     );
   }
@@ -98,12 +119,12 @@ const ViewPlan = ({ route, navigation }) => {
       title: "Plan Progress",
       rows: [
         [
-          { title: "Goals", value: 0 },
-          { title: "Tasks", value: 0 },
+          { title: "Goals", value: goalsCount },
+          { title: "Tasks", value: tasksCount },
         ],
         [
-          { title: "Due Tasks", value: 0 },
-          { title: "Overdue Tasks", value: 0 },
+          { title: "Due Tasks", value: dueTasksCount },
+          { title: "Overdue Tasks", value: overdueTasksCount },
         ],
       ],
     },
@@ -114,21 +135,26 @@ const ViewPlan = ({ route, navigation }) => {
   ];
 
   return (
-    <View  style={[{flex:1},{backgroundColor:theme.listContentBackgroundColor}]}>
-      {
-        loading ? <Loader loading={loading} /> : <PlannerView
-        data={DATA}
-        showNavButtons={true}
-        onLeftbackPress={() => navigation.navigate("ListPlans")}
-        onRightButtonPress={() =>
-          navigation.navigate("ListGoals", { planId: plan.plan_id })
-        }
-        leftButtonTitle="All Plans"
-        rightButtonTitle="Plan Goals"
-      />
-      }
-      
-      
+    <View
+      style={[
+        { flex: 1 },
+        { backgroundColor: theme.listContentBackgroundColor },
+      ]}
+    >
+      {loading ? (
+        <Loader loading={loading} />
+      ) : (
+        <PlannerView
+          data={DATA}
+          showNavButtons={true}
+          onLeftbackPress={() => navigation.navigate("ListPlans")}
+          onRightButtonPress={() =>
+            navigation.navigate("ListGoals", { planId: plan.plan_id })
+          }
+          leftButtonTitle="All Plans"
+          rightButtonTitle="Plan Goals"
+        />
+      )}
     </View>
   );
 };

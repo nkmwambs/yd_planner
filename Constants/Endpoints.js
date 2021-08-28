@@ -16,5 +16,7 @@ export default {
     task_notes: "https://compassion-africa.org/api/user/get_task_notes/",
     get_plans: "https://compassion-africa.org/api/user/plans/",
     active_plan: "https://compassion-africa.org/api/user/active_plan/",
-    get_plan: "https://compassion-africa.org/api/user/get_plan/"
+    get_plan: "https://compassion-africa.org/api/user/get_plan/",
+    plan_statistics: "https://compassion-africa.org/api/user/plan_statistics/",
+    update_task_status: "https://compassion-africa.org/api/user/update_task_status/"
 }

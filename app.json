@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "youth_planner",
-    "slug": "youth_planner",
+    "name": "Youth Planner",
+    "slug": "youth-planner",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": ""
+    "description": "This app is develop to assist our Church neighbors able to reach its youth beneficiaries staying away from the Church. The app will be managing the youth planning  and mentorship processes."
   }
 }
