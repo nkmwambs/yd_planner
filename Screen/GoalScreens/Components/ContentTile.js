@@ -10,7 +10,7 @@ const ContentTile = ({ title, value }) => {
     return (
         <View style={{ flex: 1, flexDirection: 'row' }}>
             <View style={{ flex: 1, marginRight: 5 }}>
-                <Text style={[{ fontWeight: 'bold', }, {color:theme.contentFontColor}]}>{title}:</Text>
+                <Text style={[{ fontWeight: 'bold', }, {color:theme.contentFontColor}]}>{title}</Text>
             </View>
             <View style={{ flex: 1 }}>
                 <Text style={[{color:theme.contentFontColor}]}>{value}</Text>
