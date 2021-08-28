@@ -28,23 +28,12 @@ const TaskCard = (props) => {
   const { taskId } = useContext(PlanContext);
   const navigation = useNavigation();
 
-  //console.log(taskStatus + "........");
+  //console.log(taskStatus);
 
   useEffect(() => {
     setTaskStatus(props.taskState)
   })
 
-//   const composeTaskStatus = () => {
-//     let status = "New";
-
-//     if (taskStatus == 1) {
-//       status = "In Progress";
-//     } else if (taskStatus == 2) {
-//       status = "Completed";
-//     }
-    
-//     return status;
-//   };
 
   const updateTaskStatus = async () => {
     var dataToSend = {
@@ -76,20 +65,6 @@ const TaskCard = (props) => {
         setLoading(false);
         console.error(error);
       });
-  };
-
-  const changeTaskStatus = () => {
-    let new_status = 0;
-
-    if (taskStatus == 0) {
-      new_status = 1;
-    } else if (taskStatus == 1) {
-      new_status = 2;
-    } else if (taskStatus == 2) {
-      new_status = 1;
-    }
-
-    return new_status;
   };
 
   return (
