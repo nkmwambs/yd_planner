@@ -31,11 +31,16 @@ const TaskCard = (props) => {
   //console.log(taskStatus);
 
   useEffect(() => {
-    setTaskStatus(props.taskState)
+    //setTaskStatus(props.taskState)
+    //setTaskStatus(taskStatus == 0 ? 1 : (taskStatus == 2 ? 1 : 2));
+    // if(taskStatus != 0){
+    //   setTaskStatus(taskStatus)
+    // }
   })
 
 
-  const updateTaskStatus = async () => {
+  const updateTaskStatus = async (taskStatus) => {
+    //console.log(taskStatus);
     var dataToSend = {
       task_id: taskId,
       task_status: taskStatus,
@@ -107,7 +112,8 @@ const TaskCard = (props) => {
           <Button
             onPress={() => {
               setTaskStatus(taskStatus == 0 ? 1 : (taskStatus == 2 ? 1 : 2));
-              updateTaskStatus(taskStatus);
+              taskStatus == 0 ? updateTaskStatus(1) : (taskStatus == 2 ? updateTaskStatus(1) : updateTaskStatus(2))
+              //updateTaskStatus(taskStatus);
               setLoading(true);
               //console.log(taskStatus)
             }}
