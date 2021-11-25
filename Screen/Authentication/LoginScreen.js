@@ -23,6 +23,7 @@ import Endpoints from '../../Constants/Endpoints';
 
 import NetInfo from "@react-native-community/netinfo";
 import { GlobalContext } from '../../Context/GlobalContext';
+import { PlanContext } from "../../Context/PlanContext";
 
 const LoginScreen = ({ navigation }) => {
     const [userEmail, setUserEmail] = useState('');
@@ -32,6 +33,7 @@ const LoginScreen = ({ navigation }) => {
     const [connected, setConnected] = useState(false);
 
     const {registerUserId} = useContext(GlobalContext)
+    const {updateCurrentPlanId, updateCurrentGoalId, updateCurrentTaskId} = useContext(PlanContext)
 
     const passwordInputRef = createRef();
 
@@ -87,6 +89,9 @@ const LoginScreen = ({ navigation }) => {
                     AsyncStorage.setItem('user_name', responseJson.data.user_name);
                     //console.log(responseJson.data.email);
                     registerUserId(responseJson.data.user_id)
+                    updateCurrentPlanId(0)
+                    updateCurrentGoalId(0)
+                    updateCurrentTaskId(0)
                     navigation.replace('MainDrawerNavigator');
                 } else {
                     //setErrortext(responseJson.msg);

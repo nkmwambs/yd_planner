@@ -29,6 +29,9 @@ const AddGoal = ({ route, navigation }) => {
   const [goalDescription, setGoalDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [planStartDate, setPlanStartDate] = useState('');
+  const [planEndDate, setPlanEndDate] = useState('');
+
   //const { planId } = route.params;
 
   const { start_date: goalStartDate, end_date: goalEndDate, updateCurrentGoalId, planId } =
@@ -37,7 +40,9 @@ const AddGoal = ({ route, navigation }) => {
   //const navigation = useNavigation();
 
   useEffect(() => {
+    getPlan();
     getThemes();
+    //console.log(planStartDate + ' => ' + planEndDate);
   },[navigation]);
 
   const getThemes = async () => {
@@ -73,6 +78,30 @@ const AddGoal = ({ route, navigation }) => {
     });
   };
 
+    const getPlan = async () => {
+
+      await fetch(Endpoints.get_plan + planId, {
+
+          method: "get",
+          headers: {
+              'Content-Type':
+                  'application/x-www-form-urlencoded;charset=UTF-8',
+          }
+      })
+          .then((response) => response.json())
+          .then((json) => {
+              setPlanStartDate(json.data.plan_start_date);
+              setPlanEndDate(json.data.plan_end_date);
+              //setGoalName(json.data.goal_name);
+              setLoading(false);
+
+              //console.log(json.data.plan_start_date + ' => ' + json.data.plan_end_date);
+              
+          })
+          .catch((error) => console.error(error))
+
+  }
+
   const handleSubmitButton = () => {
     //setErrortext("");
 
@@ -105,13 +134,21 @@ const AddGoal = ({ route, navigation }) => {
       alert("Start date cannot be greater than end date");
       return;
     }
+    
+
+    if (
+        new Date(planStartDate) >= goalStartDate || new Date(planStartDate) >= goalEndDate ||
+        new Date(planEndDate) <= goalStartDate || new Date(planEndDate) <= goalEndDate
+    ) {
+        alert("The goal should be within the plan timeframe");
+        return;
+    }
 
     Alert.alert("Confirmation", "Are you sure you want to submit this goal?", [
       {
         text: "Yes",
         onPress: async () => {
-          //console.log("OK Pressed");
-
+          
           const user_id = await AsyncStorage.getItem("user_id");
 
           //setLoading(false);

@@ -21,7 +21,7 @@ import ViewGoal from "../GoalScreens/ViewGoal";
 
 import Colors from "../../Constants/Colors";
 
-import { Image } from "react-native";
+import { Image,Button } from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -98,6 +98,14 @@ const GoalScreenStackNavigator = ({ route, navigation }) => {
         component={ListTasks}
         options={{
           title: "Goal Tasks",
+          headerLeft: (props) => (
+            <Button
+              title="Go to Goals"
+              onPress={() => {
+                navigation.navigate('ListGoals');
+              }}
+            />
+          ),
         }}
       />
 

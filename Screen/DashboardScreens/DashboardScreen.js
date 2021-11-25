@@ -20,7 +20,7 @@ import ThemeChanger from '../Components/ThemeChanger'
 import UserAvatar from '../DashboardScreens/UserAvatar'
 
 import {GlobalContext} from '../../Context/GlobalContext'
-
+import { PlanContext } from "../../Context/PlanContext";
 
 export default DashboardScreen = ({ navigation }) => {
 
@@ -30,9 +30,12 @@ export default DashboardScreen = ({ navigation }) => {
     //const [loading, setLoading] = useState(false);
     
     const {theme, changeTheme, theme_name} = useContext(GlobalContext)
+    const {updateCurrentPlanId} = useContext(PlanContext)
 
     useEffect(() => {
         useBackAction();
+
+        updateCurrentPlanId(0)
 
         // Subscribe for the focus Listener
         const unsubscribe = navigation.addListener('focus', () => {

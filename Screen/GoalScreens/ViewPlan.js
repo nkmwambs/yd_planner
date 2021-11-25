@@ -19,7 +19,7 @@ const ViewPlan = ({ route, navigation }) => {
   const [tasksCount,setTasksCount] = useState(0)
 
   const { planId, updateCurrentPlanId } = useContext(PlanContext);
-  const { theme } = useContext(GlobalContext);
+  const { theme, userId } = useContext(GlobalContext);
 
   //console.log(route)
   //console.log(planId)
@@ -34,6 +34,7 @@ const ViewPlan = ({ route, navigation }) => {
     }
 
     await getItems(viewPlan).then((data) => {
+      //console.log(user_id);
       setPlan(data);
       setLoading(false);
       updateCurrentPlanId(is_valid_object(data) ? data.plan_id : 0);

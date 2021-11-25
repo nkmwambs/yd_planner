@@ -12,9 +12,12 @@ const ViewGoal = ({ route, navigation }) => {
   const [goal, setGoal] = useState({});
   const [loading, setLoading] = useState(true);
 
-  const {planId, goalId} = useContext(PlanContext)
-  // const goalId = route.params.goalId;
-  // const planId = route.params.planId;
+  const {planId, goalId} = useContext(PlanContext)  
+
+  const [dueTasksCount, setDueTasksCount] = useState(0)
+  const [completeTasksCount,setCompleteTasksCount] = useState(0)
+  const [overdueTasksCount,setOverdueTasksCount] = useState(0)
+  const [allTasksCount,setAllTasksCount] = useState(0)
 
   const getGoal = async () => {
     
@@ -28,6 +31,7 @@ const ViewGoal = ({ route, navigation }) => {
   };
 
   useEffect(() => {
+    getStatistics();
     const unsubscribe = navigation.addListener("focus", () => {
       getGoal();
     });
@@ -37,6 +41,19 @@ const ViewGoal = ({ route, navigation }) => {
       unsubscribe;
     };
   });
+
+  const getStatistics = async () => {
+    //const user_id = await AsyncStorage.getItem("user_id");
+
+    await getItems(Endpoints.goal_statistics + goalId + '/' + new Date().toISOString().slice(0, 10) ).then((data) => {
+        setDueTasksCount(data.count_goal_due_tasks);
+        setCompleteTasksCount(data.count_goal_complete_tasks);
+        setOverdueTasksCount(data.count_goal_overdue_tasks);
+        setAllTasksCount(data.count_goal_all_tasks);
+        
+    });
+
+  };
 
   const is_valid_object = (obj) => {
     return typeof obj == "object" && obj != null;
@@ -86,16 +103,17 @@ const ViewGoal = ({ route, navigation }) => {
       ],
     },
     {
-      title: "Plan Progress",
+      
+      title: "Goal Progress",
       rows: [
         [
-          { title: "Goals", value: 0 },
-          { title: "Tasks", value: 0 },
+          { title: "Due Tasks", value: dueTasksCount },
+          { title: "Overdue Tasks", value: overdueTasksCount },
         ],
         [
-          { title: "Due Tasks", value: 0 },
-          { title: "Overdue Tasks", value: 0 },
-        ],
+          { title: "Completed Tasks", value: completeTasksCount },
+          { title: "All Tasks", value: allTasksCount}
+        ]
       ],
     },
     {

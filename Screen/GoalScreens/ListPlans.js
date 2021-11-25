@@ -59,9 +59,9 @@ const ListPlans = ({ navigation }) => {
                 renderItem={renderItem}
             />
 
-            <FloatActionButton clickHandler={() => {
+            {/* <FloatActionButton clickHandler={() => {
                 navigation.navigate("AddPlan");
-            }} />
+            }} /> */}
 
         </View>
     )
