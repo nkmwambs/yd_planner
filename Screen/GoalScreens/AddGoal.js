@@ -29,12 +29,23 @@ const AddGoal = ({ route, navigation }) => {
   const [goalDescription, setGoalDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [quarterNumber, setQuarterNumber] = useState(0);
+  const [quarterName, setQuarterName] = useState("");
+
   const [planStartDate, setPlanStartDate] = useState('');
   const [planEndDate, setPlanEndDate] = useState('');
 
+  //const [quarterStartDate, setQuarterStartDate] = useState('2021-07-01');
+  //const [quarterEndDate, setQuarterEndDate] = useState('2021-09-30');
+
+  const [quarters, setQuarters] = useState([]);
+
   //const { planId } = route.params;
 
-  const { start_date: goalStartDate, end_date: goalEndDate, updateCurrentGoalId, planId } =
+  const {  
+    updateCurrentGoalId, 
+    planId 
+  } =
     useContext(PlanContext);
 
   //const navigation = useNavigation();
@@ -42,16 +53,12 @@ const AddGoal = ({ route, navigation }) => {
   useEffect(() => {
     getPlan();
     getThemes();
-    //console.log(planStartDate + ' => ' + planEndDate);
+    getQuarters()
   },[navigation]);
 
   const getThemes = async () => {
     fetch(Endpoints.themes, {
       method: "get",
-      // headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authentication': `Bearer ${token}`
-      // },
       headers: {
         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
       },
@@ -59,9 +66,20 @@ const AddGoal = ({ route, navigation }) => {
       .then((response) => response.json())
       .then((json) => {
         setthemeDetails(json.data);
-        // if (json.status === 'success') {
-        //     console.log(json.data);
-        // }
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const getQuarters = async () => {
+    fetch(Endpoints.get_quarters, {
+      method: "get",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        setQuarters(json.data);
       })
       .catch((error) => console.error(error));
   };
@@ -120,28 +138,9 @@ const AddGoal = ({ route, navigation }) => {
       return;
     }
 
-    if (!goalStartDate) {
-      alert("Please fill Start Date");
+    if (quarterNumber == 0) {
+      alert("Please fill Goal Period");
       return;
-    }
-
-    if (!goalEndDate) {
-      alert("Please fill End Date");
-      return;
-    }
-
-    if (goalStartDate > goalEndDate) {
-      alert("Start date cannot be greater than end date");
-      return;
-    }
-    
-
-    if (
-        new Date(planStartDate) >= goalStartDate || new Date(planStartDate) >= goalEndDate ||
-        new Date(planEndDate) <= goalStartDate || new Date(planEndDate) <= goalEndDate
-    ) {
-        alert("The goal should be within the plan timeframe");
-        return;
     }
 
     Alert.alert("Confirmation", "Are you sure you want to submit this goal?", [
@@ -158,8 +157,9 @@ const AddGoal = ({ route, navigation }) => {
             goal_name: goalTitle,
             theme_id: goalThemeId,
             goal_description: goalDescription,
-            goal_start_date: goalStartDate,
-            goal_end_date: goalEndDate,
+            //goal_start_date: goalStartDate,
+            //goal_end_date: goalEndDate,
+            goal_period: quarterNumber,
             plan_id: planId,
             user_id: user_id,
             goal_last_modified_by: user_id,
@@ -226,6 +226,27 @@ const AddGoal = ({ route, navigation }) => {
     ]);
   };
 
+  // const Quarters = [
+  //   {quarter_number: 1, quarter_name: 'First Quarter'},
+  //   {quarter_number: 2, quarter_name: 'Second Quarter'},
+  //   {quarter_number: 3, quarter_name: 'Third Quarter'},
+  //   {quarter_number: 4, quarter_name: 'Fourth Quarter'}
+  // ];
+
+
+
+  const renderQuarters = () => {
+    return quarters.map((quarter) => {
+      return (
+        <Picker.Item
+          key={quarter.quarter_number}
+          label={quarter.quarter_name}
+          value={quarter.quarter_number}
+        />
+      );
+    });
+  };
+
   return (
 
     <View style={{ flex: 1 }}>
@@ -249,7 +270,7 @@ const AddGoal = ({ route, navigation }) => {
             onValueChange={(itemValue, itemIndex) => {
               setGoalTheme(itemValue);
               setGoalThemeId(itemIndex);
-              //console.log(itemIndex);
+              
             }}
             pickerLabel="Please choose a theme"
             renderItems={renderThemes()}
@@ -263,12 +284,24 @@ const AddGoal = ({ route, navigation }) => {
             numberOfLines={5}
           />
 
-          <PlannerDatePicker
+          {/* <PlannerDatePicker
             inputLabel="Choose Start Date"
             datePosition="start"
           />
 
-          <PlannerDatePicker inputLabel="Choose end Date" datePosition="end" />
+          <PlannerDatePicker inputLabel="Choose end Date" datePosition="end" /> */}
+
+          <GoalPicker
+            selectedValue={quarterName}
+            onValueChange={(itemValue, itemIndex) => {
+              setQuarterName(itemValue);
+              setQuarterNumber(itemIndex);
+              //changeStartDate(quarterStartDate)
+              //changeEndDate(quarterEndDate)
+            }}
+            pickerLabel="Please choose a period"
+            renderItems={renderQuarters()}
+          />
 
           <PlannerButton
             error="Error occurred"

@@ -3,9 +3,10 @@ import React from "react";
 
 // Import Navigators from React Navigation
 import {
-  createStackNavigator,
-  HeaderBackButton,
+  createStackNavigator
 } from "@react-navigation/stack";
+
+//import { HeaderBackButton } from 'react-navigation';
 
 import ListGoals from "../GoalScreens/ListGoals";
 import ListTasks from "../GoalScreens/ListTasks";
@@ -21,7 +22,8 @@ import ViewGoal from "../GoalScreens/ViewGoal";
 
 import Colors from "../../Constants/Colors";
 
-import { Image,Button } from "react-native";
+import { Image,Button, TouchableOpacity } from "react-native";
+import { Icon } from "react-native-elements/dist/icons/Icon";
 
 const Stack = createStackNavigator();
 
@@ -93,36 +95,33 @@ const GoalScreenStackNavigator = ({ route, navigation }) => {
         }}
       />
 
+      {/* <Stack.Screen
+        name="ListTasks"
+        component={ListTasks}
+        options={{
+          title: "Goal Tasks"
+        }}
+      /> */}
+
       <Stack.Screen
         name="ListTasks"
         component={ListTasks}
         options={{
           title: "Goal Tasks",
           headerLeft: (props) => (
-            <Button
-              title="Go to Goals"
-              onPress={() => {
-                navigation.navigate('ListGoals');
-              }}
-            />
+            <TouchableOpacity>
+              <Icon 
+                type="font-awesome"
+                name="arrow-left"
+                onPress={() =>navigation.navigate("ListGoals")}
+                containerStyle={{
+                  marginLeft:10
+                }}
+              />
+            </TouchableOpacity>
           ),
         }}
       />
-
-      {/* <Stack.Screen
-        name="ListTasks"
-        component={ListTasks}
-        options={{
-          title: "Goal Tasks",
-          headerLeft: (props) => (
-            <HeaderBackButton
-              {...props}
-              style={styles.custom}
-              onPress={() => navigation.popToTop()}
-            />
-          ),
-        }}
-      /> */}
 
       <Stack.Screen
         name="ViewTask"

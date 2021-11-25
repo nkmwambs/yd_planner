@@ -19,5 +19,6 @@ export default {
     get_plan: "https://compassion-africa.org/api/user/get_plan/",
     plan_statistics: "https://compassion-africa.org/api/user/plan_statistics/",
     update_task_status: "https://compassion-africa.org/api/user/update_task_status/",
-    goal_statistics: "https://compassion-africa.org/api/user/goal_statistics/"
+    goal_statistics: "https://compassion-africa.org/api/user/goal_statistics/",
+    get_quarters: "https://compassion-africa.org/api/user/get_quarters/"
 }

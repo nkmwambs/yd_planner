@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, FlatList, StyleSheet, TouchableOpacity, Text, BackHandler, Alert } from "react-native";
+import { 
+    View, 
+    FlatList, 
+    StyleSheet, 
+    Text, 
+    BackHandler, 
+    Alert } from "react-native";
 
 import Strings from '../../Constants/Strings/en'
 
@@ -25,36 +31,27 @@ const ListTasks = ({ route, navigation }) => {
     const [goalName, setGoalName] = useState('');
     const [loading, setLoading] = useState(true);
 
+     // BackAction prevents back action to add goals form
+     const backAction = () => {
+        navigation.navigate("ListGoals");
+    };
+
+
     useEffect(() => {
-
-        //console.log(isGoalAddFormInStack);
-
-        // Subscribe for the focus Listener
-        const unsubscribe = navigation.addListener('focus', () => {
-            getTasks();
-        });
-
-        // BackAction prevents back action to add goals form
-        const backAction = () => {
-            navigation.navigate("ListGoals");
-        };
 
         const backHandler = BackHandler.addEventListener(
             "hardwareBackPress",
             backAction
         );
 
-        return () => {
-            backHandler.remove();
-            // Unsubscribe for the focus Listener
-            unsubscribe;
-        };
+        return () => backHandler.remove();
 
-    }, [navigation]);
+    });
 
     useEffect(() => {
         getGoal();
-    })
+        getTasks();
+    },[navigation])
 
     const getGoal = async () => {
 
