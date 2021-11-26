@@ -22,19 +22,21 @@ import UserAvatar from '../DashboardScreens/UserAvatar'
 import {GlobalContext} from '../../Context/GlobalContext'
 import { PlanContext } from "../../Context/PlanContext";
 
+import {is_valid_object} from "../../Functions/helpers"
+
 export default DashboardScreen = ({ navigation }) => {
 
     const [overdueGoals, setOverdueGoals] = useState(0);
     const [dueTasks, setDueTasks] = useState(0);
     const [overdueTasks, setOverdueTasks] = useState(0);
-    //const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     
-    const {theme, changeTheme, theme_name} = useContext(GlobalContext)
+    const {theme, changeTheme, theme_name, updateLanguagePhrases} = useContext(GlobalContext)
     const {updateCurrentPlanId} = useContext(PlanContext)
 
     useEffect(() => {
         useBackAction();
-
+        get_language_phrases()
         updateCurrentPlanId(0)
 
         // Subscribe for the focus Listener
@@ -47,6 +49,20 @@ export default DashboardScreen = ({ navigation }) => {
             unsubscribe;
         };
     }, [navigation]);
+
+
+    const get_language_phrases = async () => {
+        const user_id = await AsyncStorage.getItem("user_id");
+        const user_language = await AsyncStorage.getItem("user_language");
+    
+        let language_endpoint = Endpoints.language + user_id + '/' + user_language
+    
+        await getItems(language_endpoint).then((data) => {
+          //console.log(data);
+          setLoading(false);
+          updateLanguagePhrases(is_valid_object(data) ? data : {});
+        });
+      };
 
 
     const getStatistics = async () => {

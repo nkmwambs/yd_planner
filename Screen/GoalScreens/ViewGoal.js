@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text } from "react-native";
 import getItems from "../../Functions/getItems";
+import {is_valid_object} from "../../Functions/helpers"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loader from "../Components/Loader";
 import Endpoints from "../../Constants/Endpoints";
@@ -55,9 +56,9 @@ const ViewGoal = ({ route, navigation }) => {
 
   };
 
-  const is_valid_object = (obj) => {
-    return typeof obj == "object" && obj != null;
-  };
+  // const is_valid_object = (obj) => {
+  //   return typeof obj == "object" && obj != null;
+  // };
 
   if (!is_valid_object(goal)) {
     return (

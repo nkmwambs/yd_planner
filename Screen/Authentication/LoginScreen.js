@@ -87,7 +87,9 @@ const LoginScreen = ({ navigation }) => {
                 if (responseJson.status === 'success') {
                     AsyncStorage.setItem('user_id', responseJson.data.user_id);
                     AsyncStorage.setItem('user_name', responseJson.data.user_name);
-                    //console.log(responseJson.data.email);
+                    AsyncStorage.setItem('user_language', responseJson.data.language_name);
+
+                    //console.log(responseJson.data);
                     registerUserId(responseJson.data.user_id)
                     updateCurrentPlanId(0)
                     updateCurrentGoalId(0)
