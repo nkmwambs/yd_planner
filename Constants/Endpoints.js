@@ -1,5 +1,5 @@
 const api_url = "https://compassion-africa.org/api/user/api_result/"
-const api_gateway_url = "https://4p7l020eh4.execute-api.eu-west-1.amazonaws.com/dev/"
+//const api_gateway_url = "https://4p7l020eh4.execute-api.eu-west-1.amazonaws.com/dev/"
 
 export default {
     login: api_url + "login",
