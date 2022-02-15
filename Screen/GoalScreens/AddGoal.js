@@ -98,7 +98,7 @@ const AddGoal = ({ route, navigation }) => {
 
     const getPlan = async () => {
 
-      await fetch(Endpoints.get_plan + planId, {
+      await fetch(Endpoints.get_plan + "plan_id?" + planId, {
 
           method: "get",
           headers: {

@@ -55,7 +55,7 @@ export default DashboardScreen = ({ navigation }) => {
         const user_id = await AsyncStorage.getItem("user_id");
         const user_language = await AsyncStorage.getItem("user_language");
     
-        let language_endpoint = Endpoints.language + user_id + '/' + user_language
+        let language_endpoint = Endpoints.language + user_id
     
         await getItems(language_endpoint).then((data) => {
           //console.log(data);

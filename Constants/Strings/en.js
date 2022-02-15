@@ -33,5 +33,5 @@ export default {
     enterPassword: "Enter Password",
     login: "Login",
     taskLabel: "Task",
-
+    student: "Student"
 }

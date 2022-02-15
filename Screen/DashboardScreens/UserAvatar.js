@@ -1,11 +1,15 @@
-import React, {useState,useEffect} from 'react'
+import React, {useState,useEffect, useContext} from 'react'
 import {View, Image, TouchableOpacity, Text, StyleSheet} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {get_phrase} from "../../Functions/helpers"
+import {GlobalContext} from '../../Context/GlobalContext'
+import Strings from '../../Constants/Strings/en'
 
 const UserAvatar = () => {
 
     const [userName, setUserName] = useState();
+    const {languagePhrases} = useContext(GlobalContext)
 
     const getUserName = async () => {
         await AsyncStorage.getItem('user_name')
@@ -18,6 +22,7 @@ const UserAvatar = () => {
 
     useEffect(() => {
         getUserName();
+        //console.log(get_phrase('student', languagePhrases));
     })
 
     const add_story = () => {
@@ -50,7 +55,7 @@ const UserAvatar = () => {
 
             <View style={styles.infoContainer}>
                 <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{userName}</Text>
-                <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>Student</Text>
+                <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{Strings.student}</Text>
             </View>
         </>
     );

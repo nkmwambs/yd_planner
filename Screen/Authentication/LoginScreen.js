@@ -20,7 +20,7 @@ import Loader from '../Components/Loader';
 import Colors from '../../Constants/Colors';
 import Strings from '../../Constants/Strings/en'
 import Endpoints from '../../Constants/Endpoints';
-
+import {is_valid_object} from "../../Functions/helpers"
 import NetInfo from "@react-native-community/netinfo";
 import { GlobalContext } from '../../Context/GlobalContext';
 import { PlanContext } from "../../Context/PlanContext";
@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
     const [errortext, setErrortext] = useState('');
     const [connected, setConnected] = useState(false);
 
-    const {registerUserId} = useContext(GlobalContext)
+    const {registerUserId, updateLanguagePhrases} = useContext(GlobalContext)
     const {updateCurrentPlanId, updateCurrentGoalId, updateCurrentTaskId} = useContext(PlanContext)
 
     const passwordInputRef = createRef();
@@ -48,6 +48,19 @@ const LoginScreen = ({ navigation }) => {
         // Unsubscribe
         unsubscribe();
     })
+
+    // const get_language_phrases = async () => {
+    //     const user_id = await AsyncStorage.getItem("user_id");
+    //     const user_language = await AsyncStorage.getItem("user_language");
+    
+    //     let language_endpoint = Endpoints.language + user_id + '/' + user_language
+    
+    //     await getItems(language_endpoint).then((data) => {
+    //       //console.log(data);
+    //       setLoading(false);
+    //       updateLanguagePhrases(is_valid_object(data) ? data : {});
+    //     });
+    //   };
 
     const handleSubmitPress = () => {
         setErrortext('');
@@ -71,11 +84,12 @@ const LoginScreen = ({ navigation }) => {
 
         fetch(Endpoints.login, {
             method: 'POST',
-            body: formBody,
+            body: JSON.stringify(dataToSend),
             headers: {
                 //Header Defination
-                'Content-Type':
-                    'application/x-www-form-urlencoded;charset=UTF-8',
+                'Content-Type':'multipart/form-data',
+                'x-api-key':'SZcCIny4AsVakkp0m8kw1nKIHLqPP8mbQSsiqx40',
+                'Accept': '*/*'
             },
         })
             .then((response) => response.json())
@@ -88,15 +102,18 @@ const LoginScreen = ({ navigation }) => {
                     AsyncStorage.setItem('user_id', responseJson.data.user_id);
                     AsyncStorage.setItem('user_name', responseJson.data.user_name);
                     AsyncStorage.setItem('user_language', responseJson.data.language_name);
+                    AsyncStorage.setItem('user_language_code', responseJson.data.language_code);
 
-                    //console.log(responseJson.data);
+                    updateLanguagePhrases(responseJson.data.language_phrases);
                     registerUserId(responseJson.data.user_id)
                     updateCurrentPlanId(0)
                     updateCurrentGoalId(0)
                     updateCurrentTaskId(0)
+
+                    //console.log(responseJson.data.language_phrases);
                     navigation.replace('MainDrawerNavigator');
                 } else {
-                    //setErrortext(responseJson.msg);
+                    console.log(responseJson);
                     setErrortext(Strings.emailPasswordNotFound)
                     //console.log('Please check your email id or password');
                 }

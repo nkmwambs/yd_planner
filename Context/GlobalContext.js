@@ -5,7 +5,7 @@ import AppReducer from './AppReducer'
 const initialState = {
     theme: 'light_theme',
     userId:0,
-    languagePhrase: {}
+    languagePhrases: {}
 }
 
 export const GlobalContext = createContext(initialState);
@@ -15,14 +15,14 @@ export const GlobalProvider = ({children}) => {
     //const [state, dispatch] = useReducer(AppReducer, initialState);
     const [theme, setTheme] = useState(initialState.theme)
     const [userId, setUserId] = useState(initialState.userId)
-    const [languagePhrase, setLanguagePhrase] = useState(initialState.languagePhrase)
+    const [languagePhrases, setLanguagePhrases] = useState(initialState.languagePhrase)
 
     const changeTheme = (theme) => {
         setTheme(theme)
     }
 
-    const updateLanguagePhrases = (languagePhrase) => {
-        setLanguagePhrase(languagePhrase)
+    const updateLanguagePhrases = (languagePhrases) => {
+        setLanguagePhrases(languagePhrases)
     }
 
     const registerUserId = (id) => {
@@ -38,7 +38,8 @@ export const GlobalProvider = ({children}) => {
                     userId:userId,
                     changeTheme,
                     registerUserId,
-                    updateLanguagePhrases
+                    updateLanguagePhrases,
+                    languagePhrases
                 } 
             }
         >

@@ -19,7 +19,7 @@ const ListPlans = ({ navigation }) => {
 
         const user_id = await AsyncStorage.getItem('user_id');
 
-        await getItems(Endpoints.get_plans + user_id).then((data) => {
+        await getItems(Endpoints.get_plan + "?user_id=" + user_id).then((data) => {
             setPlans(data)
             setLoading(false)
         })

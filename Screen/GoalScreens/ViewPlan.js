@@ -28,10 +28,10 @@ const ViewPlan = ({ route, navigation }) => {
   const getPlan = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
 
-    let viewPlan = Endpoints.active_plan + user_id;
+    let viewPlan = Endpoints.get_plan + '?user_id=' + user_id;
 
     if (planId > 0) {
-      viewPlan = Endpoints.get_plan + planId;
+      viewPlan = Endpoints.get_plan + "?plan_id=" + planId;
     }
 
     await getItems(viewPlan).then((data) => {
