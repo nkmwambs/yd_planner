@@ -33,15 +33,15 @@ const ListGoals = ({ route, navigation }) => {
 
     useEffect(() => {
 
-        const unsubscribe = navigation.addListener('focus', () => {
+        //const unsubscribe = navigation.addListener('focus', () => {
           getGoals();
-        });
+        //});
 
-        return () => {
-            // Unsubscribe for the focus Listener
-            unsubscribe;
-        };
-    })
+        // return () => {
+        //     // Unsubscribe for the focus Listener
+        //     unsubscribe;
+        // };
+    },[navigation])
 
 
     const renderItem = ({ item }) => {

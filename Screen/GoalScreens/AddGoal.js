@@ -43,11 +43,7 @@ const AddGoal = ({ route, navigation }) => {
 
   //const { planId } = route.params;
 
-  const {  
-    updateCurrentGoalId, 
-    planId 
-  } =
-    useContext(PlanContext);
+  const {updateCurrentGoalId, planId, statisticsChanged, updateStatisticsChanged} = useContext(PlanContext);
   //const { planId } = route.params;
 
   //const navigation = useNavigation();
@@ -208,6 +204,7 @@ const AddGoal = ({ route, navigation }) => {
               if (responseJson.status === "success") {
                 //setIsRegistraionSuccess(true);
                 const response_goal_id = responseJson.data["goal_id"];
+                const goalCount = responseJson.data["goal_count"];
                 // navigation.navigate("ListTasks", {
                 //   goal_id: response_goal_id,
                 //   isGoalAddFormInStack: true,
@@ -215,6 +212,7 @@ const AddGoal = ({ route, navigation }) => {
                 // console.log(
                 //     'Goal Submitted Successfully'
                 // );
+                statisticsChanged ? updateStatisticsChanged(false) :  updateStatisticsChanged(true);
                 updateCurrentGoalId(response_goal_id)
                 navigation.navigate("ListTasks")
               } else {

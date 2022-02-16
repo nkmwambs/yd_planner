@@ -19,7 +19,7 @@ const ViewPlan = ({ route, navigation }) => {
   const [overdueTasksCount,setOverdueTasksCount] = useState(0)
   const [tasksCount,setTasksCount] = useState(0)
 
-  const { planId, updateCurrentPlanId } = useContext(PlanContext);
+  const { planId, updateCurrentPlanId, statisticsChanged } = useContext(PlanContext);
   const { theme, userId } = useContext(GlobalContext);
   //const  planId = typeof route.params == 'undefined' ? 0 : route.params.planId;
 
@@ -42,8 +42,10 @@ const ViewPlan = ({ route, navigation }) => {
 
   const getStatistics = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
-
-    await getItems(Endpoints.plan_statistics + planId + '/' + new Date().toISOString().slice(0, 10) ).then((data) => {
+    const url = Endpoints.plan_statistics + "?plan_id=" + planId + '&target_date=' + new Date().toISOString().slice(0, 10)
+    
+    await getItems(url)
+    .then((data) => {
         setDueTasksCount(data.count_plan_due_tasks);
         setGoalsCount(data.count_plan_goals);
         setOverdueTasksCount(data.count_overdue_plan_tasks);
@@ -57,7 +59,7 @@ const ViewPlan = ({ route, navigation }) => {
     getPlan();
     getStatistics()
 
-  }, [navigation,planId]); //navigation, planId, dueTasksCount, goalsCount, overdueTasksCount, tasksCount
+  }, [navigation,planId, statisticsChanged]); //navigation, planId, dueTasksCount, goalsCount, overdueTasksCount, tasksCount
 
 
   if (!is_valid_object(plan)) {

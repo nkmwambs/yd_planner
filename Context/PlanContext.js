@@ -6,6 +6,7 @@ const initialization = {
     task_id:0,
     start_date:'',
     end_date:'',
+    statisticsChanged:false,
 }
 
 export const PlanContext = createContext(initialization);
@@ -18,6 +19,8 @@ export const PlanProvider = ({children}) => {
     const [planId,setPlanId] = useState(initialization.plan_id);
     const [goalId,setGoalId] = useState(initialization.goal_id);
     const [taskId,setTaskId] = useState(initialization.task_id);
+
+    const [statisticsChanged, setStatisticsChanged] = useState(initialization.statisticsChanged)
 
     const changeStartDate = (date) => {
         setStartDate(date);
@@ -39,6 +42,9 @@ export const PlanProvider = ({children}) => {
         setTaskId(id);
     }
 
+    const updateStatisticsChanged = (statisticsChangedFlag) => {
+        setStatisticsChanged(statisticsChangedFlag);
+    }
 
     return (
         <PlanContext.Provider
@@ -49,11 +55,13 @@ export const PlanProvider = ({children}) => {
                     planId:planId,
                     goalId:goalId,
                     taskId:taskId,
+                    statisticsChanged,
                     changeStartDate,
                     changeEndDate,
                     updateCurrentPlanId,
                     updateCurrentGoalId,
-                    updateCurrentTaskId
+                    updateCurrentTaskId,
+                    updateStatisticsChanged,
                 }
             }
         >

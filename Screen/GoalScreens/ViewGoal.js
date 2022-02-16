@@ -13,7 +13,7 @@ const ViewGoal = ({ route, navigation }) => {
   const [goal, setGoal] = useState({});
   const [loading, setLoading] = useState(true);
 
-  const {planId, goalId} = useContext(PlanContext)  
+  const {planId, goalId, statisticsChanged} = useContext(PlanContext)  
 
   const [dueTasksCount, setDueTasksCount] = useState(0)
   const [completeTasksCount,setCompleteTasksCount] = useState(0)
@@ -33,20 +33,20 @@ const ViewGoal = ({ route, navigation }) => {
 
   useEffect(() => {
     getStatistics();
-    const unsubscribe = navigation.addListener("focus", () => {
+    //const unsubscribe = navigation.addListener("focus", () => {
       getGoal();
-    });
+    //});
 
-    return () => {
-      // Unsubscribe for the focus Listener
-      unsubscribe;
-    };
-  });
+    // return () => {
+    //   // Unsubscribe for the focus Listener
+    //   unsubscribe;
+    // };
+  },[statisticsChanged]);
 
   const getStatistics = async () => {
     //const user_id = await AsyncStorage.getItem("user_id");
 
-    await getItems(Endpoints.goal_statistics + goalId + '/' + new Date().toISOString().slice(0, 10) ).then((data) => {
+    await getItems(Endpoints.goal_statistics + "?goal_id=" + goalId + '&target_date=' + new Date().toISOString().slice(0, 10) ).then((data) => {
         setDueTasksCount(data.count_goal_due_tasks);
         setCompleteTasksCount(data.count_goal_complete_tasks);
         setOverdueTasksCount(data.count_goal_overdue_tasks);

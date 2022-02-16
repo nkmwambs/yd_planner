@@ -32,7 +32,7 @@ export default DashboardScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     
     const {theme, changeTheme, theme_name, updateLanguagePhrases} = useContext(GlobalContext)
-    const {updateCurrentPlanId} = useContext(PlanContext)
+    const {updateCurrentPlanId, statisticsChanged} = useContext(PlanContext)
 
     useEffect(() => {
         useBackAction();
@@ -48,7 +48,7 @@ export default DashboardScreen = ({ navigation }) => {
             // Unsubscribe for the focus Listener
             unsubscribe;
         };
-    }, [navigation]);
+    }, [navigation,statisticsChanged]);
 
 
     // const get_language_phrases = async () => {
@@ -67,7 +67,8 @@ export default DashboardScreen = ({ navigation }) => {
 
     const getStatistics = async () => {
         const user_id = await AsyncStorage.getItem('user_id');
-        fetch(Endpoints.dashboard_statistics + new Date().toISOString().slice(0, 10) + "/" + user_id, {
+        const url = Endpoints.dashboard_statistics + "?target_date=" + new Date().toISOString().slice(0, 10) + "&user_id=" + user_id
+        fetch(url, {
 
             method: "get",
             headers: {

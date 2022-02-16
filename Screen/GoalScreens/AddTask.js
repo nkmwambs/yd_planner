@@ -28,7 +28,7 @@ import { PlanContext } from '../../Context/PlanContext';
 const AddTask = ({ route, navigation }) => {
     // const { goal_id, planId } = route.params;
 
-    const {planId, goalId, updateCurrentTaskId} = useContext(PlanContext)
+    const {planId, goalId, updateCurrentTaskId, statisticsChanged, updateStatisticsChanged} = useContext(PlanContext)
 
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
@@ -242,6 +242,7 @@ const AddTask = ({ route, navigation }) => {
                             setLoading(false);
                             const response_task_id = responseJson.data["task_id"];
                             updateCurrentTaskId(response_task_id)
+                            statisticsChanged ? updateStatisticsChanged(false) :  updateStatisticsChanged(true);
                             //console.log(responseJson);
                             // If server response message same as Data Matched
                             //if (responseJson.status === 'success') {
