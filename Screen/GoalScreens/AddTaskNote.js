@@ -43,8 +43,9 @@ const AddTaskNote = ({ route, navigation }) => {
             formBody.push(encodedKey + '=' + encodedValue);
         }
         formBody = formBody.join('&');
-
-        await fetch(Endpoints.add_task_note, {
+        const url = Endpoints.add_task_note
+        
+        await fetch(url, {
             method: 'POST',
             body: formBody,
             headers: {

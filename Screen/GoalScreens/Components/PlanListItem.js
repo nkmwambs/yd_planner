@@ -29,7 +29,7 @@ const PlanListItem = ({ plan }) => {
                 onPress={() => {
                     //console.log(plan.plan_id)
                     updateCurrentPlanId(plan.plan_id);
-                    navigation.navigate("ViewPlan",{origin_route: "ListPlans"});
+                    navigation.navigate("ViewPlan",{origin_route: "ListPlans",planId:plan.plan_id});
                 }}
                 onLongPress={() => {
                     Alert.alert(

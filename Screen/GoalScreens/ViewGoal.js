@@ -22,12 +22,12 @@ const ViewGoal = ({ route, navigation }) => {
 
   const getGoal = async () => {
     
-    const viewGoal = Endpoints.get_goal + goalId;
-
+    const viewGoal = Endpoints.get_goal + "?goal_id=" + goalId;
+    //console.log(viewGoal)
     await getItems(viewGoal).then((data) => {
-      setGoal(data);
+      setGoal(data[0]);
       setLoading(false);
-      //console.log(data)
+      //console.log(data[0])
     });
   };
 
@@ -97,7 +97,7 @@ const ViewGoal = ({ route, navigation }) => {
         [
           {
             title: "Owner",
-            value: goal.user_first_name + " " + goal.user_last_name,
+            value: goal.user_full_name,
           },
           { title: "Created On", value: goal.goal_created_date },
         ],

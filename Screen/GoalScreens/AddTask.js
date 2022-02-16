@@ -19,7 +19,7 @@ import GoalPicker from './Components/GoalPicker'
 import { Picker } from '@react-native-picker/picker';
 import Endpoints from '../../Constants/Endpoints';
 import DateTimePickerInput from '../Components/DateTimePickerInput'
-
+import getItems from '../../Functions/getItems'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PlanContext } from '../../Context/PlanContext';
 
@@ -28,7 +28,7 @@ import { PlanContext } from '../../Context/PlanContext';
 const AddTask = ({ route, navigation }) => {
     // const { goal_id, planId } = route.params;
 
-    const {planId, goalId} = useContext(PlanContext)
+    const {planId, goalId, updateCurrentTaskId} = useContext(PlanContext)
 
     const [taskTitle, setTaskTitle] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
@@ -80,42 +80,59 @@ const AddTask = ({ route, navigation }) => {
 
     const getGoal = async () => {
 
-        await fetch(Endpoints.goal + goalId, {
-
-            method: "get",
-            headers: {
-                'Content-Type':
-                    'application/x-www-form-urlencoded;charset=UTF-8',
-            }
+        const url = Endpoints.goal + "?goal_id=" + goalId
+        //console.log(url)
+        await getItems(url).then((data) => {
+            //console.log(data[0])
+            setGoalStartDate(data[0].goal_start_date);
+            setGoalEndDate(data[0].goal_end_date);
+            setGoalName(data[0].goal_name);
+            setLoading(false);
         })
-            .then((response) => response.json())
-            .then((json) => {
-                setGoalStartDate(json.data.goal_start_date);
-                setGoalEndDate(json.data.goal_end_date);
-                setGoalName(json.data.goal_name);
-                setLoading(false);
-            })
-            .catch((error) => console.error(error))
+
+        // await fetch(Endpoints.goal + "?goal_id=" + goalId, {
+
+        //     method: "get",
+        //     headers: {
+        //         'Content-Type':
+        //             'application/x-www-form-urlencoded;charset=UTF-8',
+        //     }
+        // })
+        //     .then((response) => response.json())
+        //     .then((json) => {
+        //         setGoalStartDate(json.data.goal_start_date);
+        //         setGoalEndDate(json.data.goal_end_date);
+        //         setGoalName(json.data.goal_name);
+        //         setLoading(false);
+        //     })
+        //     .catch((error) => console.error(error))
 
     }
 
 
     const getTaskTypes = async () => {
 
-        fetch(Endpoints.task_types, {
-
-            method: "get",
-            headers: {
-                'Content-Type':
-                    'application/x-www-form-urlencoded;charset=UTF-8',
-            }
+        const url = Endpoints.task_types
+        //console.log(url)
+        await getItems(url).then((data) => {
+            //console.log(data)
+            setTaskTypeDetails(data);
         })
-            .then((response) => response.json())
-            .then((json) => {
-                setTaskTypeDetails(json.data);
 
-            })
-            .catch((error) => console.error(error))
+        // fetch(Endpoints.task_types, {
+
+        //     method: "get",
+        //     headers: {
+        //         'Content-Type':
+        //             'application/x-www-form-urlencoded;charset=UTF-8',
+        //     }
+        // })
+        //     .then((response) => response.json())
+        //     .then((json) => {
+        //         setTaskTypeDetails(json.data);
+
+        //     })
+        //     .catch((error) => console.error(error))
 
     }
 
@@ -195,7 +212,7 @@ const AddTask = ({ route, navigation }) => {
                         task_created_by: user_id,
                         task_created_date: new Date().toISOString().slice(0, 10),
                     };
-
+                    //console.log("Hello")
                     //console.log(dataToSend);
 
                     var formBody = [];
@@ -205,9 +222,12 @@ const AddTask = ({ route, navigation }) => {
                         var encodedValue = encodeURIComponent(dataToSend[key]);
                         formBody.push(encodedKey + '=' + encodedValue);
                     }
+                    
                     formBody = formBody.join('&');
-
-                    await fetch(Endpoints.add_task + goalId, {
+                    
+                    const url = Endpoints.add_task
+                    //console.log(url)
+                    await fetch(url, {
                         method: 'POST',
                         body: formBody,
                         headers: {
@@ -220,7 +240,8 @@ const AddTask = ({ route, navigation }) => {
                         .then((responseJson) => {
                             //Hide Loader
                             setLoading(false);
-
+                            const response_task_id = responseJson.data["task_id"];
+                            updateCurrentTaskId(response_task_id)
                             //console.log(responseJson);
                             // If server response message same as Data Matched
                             //if (responseJson.status === 'success') {

@@ -36,7 +36,7 @@ export default DashboardScreen = ({ navigation }) => {
 
     useEffect(() => {
         useBackAction();
-        get_language_phrases()
+        //get_language_phrases()
         updateCurrentPlanId(0)
 
         // Subscribe for the focus Listener
@@ -51,18 +51,18 @@ export default DashboardScreen = ({ navigation }) => {
     }, [navigation]);
 
 
-    const get_language_phrases = async () => {
-        const user_id = await AsyncStorage.getItem("user_id");
-        const user_language = await AsyncStorage.getItem("user_language");
+    // const get_language_phrases = async () => {
+    //     const user_id = await AsyncStorage.getItem("user_id");
+    //     const user_language = await AsyncStorage.getItem("user_language");
     
-        let language_endpoint = Endpoints.language + user_id + '/' + user_language
+    //     let language_endpoint = Endpoints.language + user_id + '/' + user_language
     
-        await getItems(language_endpoint).then((data) => {
-          //console.log(data);
-          setLoading(false);
-          updateLanguagePhrases(is_valid_object(data) ? data : {});
-        });
-      };
+    //     await getItems(language_endpoint).then((data) => {
+    //       //console.log(data);
+    //       setLoading(false);
+    //       updateLanguagePhrases(is_valid_object(data) ? data : {});
+    //     });
+    //   };
 
 
     const getStatistics = async () => {

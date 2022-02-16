@@ -16,7 +16,7 @@ import Colors from "../../Constants/Colors";
 import Endpoints from "../../Constants/Endpoints";
 import Strings from "../../Constants/Strings/en";
 import LoadingIndicator from "../Components/LoadingIndicator";
-
+import getItems from '../../Functions/getItems'
 import { useNavigation } from "@react-navigation/native";
 
 import UpdateTaskHeader from "./Components/UpdateTaskHeader";
@@ -35,21 +35,30 @@ const ViewTask = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
 
   const getTaskNotes = async () => {
-    await fetch(Endpoints.task_notes + taskId, {
-      method: "get",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        setTaskNotes(json.data);
+
+    const url = Endpoints.task_notes + "?task_id=" + taskId
+    console.log(url)
+    await getItems(url).then((data) => {
+        console.log(data)
+        setTaskNotes(data);
         setLoading(false);
-        // if (json.status === 'success') {
-        //console.log(json.data);
-        // }
-      })
-      .catch((error) => console.error(error));
+    })
+
+    // await fetch(Endpoints.task_notes + "?task_id=" + taskId, {
+    //   method: "get",
+    //   headers: {
+    //     "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+    //   },
+    // })
+    //   .then((response) => response.json())
+    //   .then((json) => {
+    //     setTaskNotes(json.data);
+    //     setLoading(false);
+    //     // if (json.status === 'success') {
+    //     //console.log(json.data);
+    //     // }
+    //   })
+    //   .catch((error) => console.error(error));
   };
 
   useEffect(() => {

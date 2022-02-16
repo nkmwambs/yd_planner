@@ -20,8 +20,10 @@ const ListGoals = ({ route, navigation }) => {
     //const { planId } = route.params;
 
     const getGoals = async () => {
-
-        await getItems(Endpoints.goals + planId).then((data) => {
+        const url = Endpoints.goals + "?plan_id=" + planId
+        //console.log(url)
+        await getItems(url).then((data) => {
+            //console.log(data)
             setGoals(data)
             setLoading(false)
             //console.log(data)

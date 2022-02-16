@@ -6,7 +6,7 @@ import Endpoints from "../../../Constants/Endpoints";
 import Strings from "../../../Constants/Strings/en";
 import LoadingIndicator from "../../Components/LoadingIndicator";
 import TaskCard from "./TaskCard";
-
+import getItems from '../../../Functions/getItems'
 import { useNavigation } from "@react-navigation/native";
 import { PlanContext } from "../../../Context/PlanContext";
 
@@ -25,14 +25,15 @@ const UpdateTaskHeader = () => {
   //console.log(taskState + '+++++++++++')
 
   const getTask = async () => {
-    await getItems(Endpoints.task + taskId).then((data) => {
-      //console.log(data);
-      setTaskTitle(data.task_name);
-      setTaskDescription(data.task_description);
-      setTaskState(data.task_status);
-      setTaskType(data.task_type_name);
-      setTaskStartDate(data.task_start_date);
-      setTaskEndDate(data.task_end_date);
+    const url = Endpoints.task + taskId
+    await getItems(url).then((data) => {
+      //console.log(data[0]);
+      setTaskTitle(data[0].task_name);
+      setTaskDescription(data[0].task_description);
+      setTaskState(data[0].task_status);
+      setTaskType(data[0].task_type_name);
+      setTaskStartDate(data[0].task_start_date);
+      setTaskEndDate(data[0].task_end_date);
       //console.log(taskState)
       setLoading(false);
     });

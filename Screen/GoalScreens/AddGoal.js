@@ -19,6 +19,7 @@ import { PlanContext } from "../../Context/PlanContext";
 
 import PlannerDatePicker from "../Components/PlannerDatePicker";
 import PlannerButton from "../Components/PlannerButton";
+import getItems from '../../Functions/getItems'
 // import { useNavigation } from "@react-navigation/native";
 
 const AddGoal = ({ route, navigation }) => {
@@ -47,6 +48,7 @@ const AddGoal = ({ route, navigation }) => {
     planId 
   } =
     useContext(PlanContext);
+  //const { planId } = route.params;
 
   //const navigation = useNavigation();
 
@@ -97,26 +99,36 @@ const AddGoal = ({ route, navigation }) => {
   };
 
     const getPlan = async () => {
+        const url = Endpoints.get_plan + "?plan_id=" +  planId
+        //console.log(url)
+        await getItems(url).then((data) => {
+            setPlanStartDate(data.plan_start_date);
+            setPlanEndDate(data.plan_end_date);
+            //console.log(data.plan_start_date + " " + data.plan_end_date)
+            setLoading(false);
+        })
 
-      await fetch(Endpoints.get_plan + planId, {
+      // await fetch(Endpoints.get_plan + "?plan_id=" +  planId, {
 
-          method: "get",
-          headers: {
-              'Content-Type':
-                  'application/x-www-form-urlencoded;charset=UTF-8',
-          }
-      })
-          .then((response) => response.json())
-          .then((json) => {
-              setPlanStartDate(json.data.plan_start_date);
-              setPlanEndDate(json.data.plan_end_date);
-              //setGoalName(json.data.goal_name);
-              setLoading(false);
+      //     method: "get",
+      //     headers: {
+      //         'Content-Type':
+      //             'application/x-www-form-urlencoded;charset=UTF-8',
+      //     }
+      // })
+      //     .then((response) => response.json())
+      //     .then((json) => {
+      //         console.log(json.data.plan_start_date)
+      //         console.log(json.data.plan_end_date)
+      //         setPlanStartDate(json.data.plan_start_date);
+      //         setPlanEndDate(json.data.plan_end_date);
+      //         //setGoalName(json.data.goal_name);
+      //         setLoading(false);
 
-              //console.log(json.data.plan_start_date + ' => ' + json.data.plan_end_date);
+      //         //console.log(json.data.plan_start_date + ' => ' + json.data.plan_end_date);
               
-          })
-          .catch((error) => console.error(error))
+      //     })
+      //     .catch((error) => console.error(error))
 
   }
 

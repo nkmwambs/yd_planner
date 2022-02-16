@@ -15,6 +15,7 @@ import Loader from '../Components/Loader';
 import TaskHeader from './Components/TaskHeader';
 import Endpoints from '../../Constants/Endpoints'
 import { PlanContext } from '../../Context/PlanContext';
+import getItems from '../../Functions/getItems'
 
 
 const ListTasks = ({ route, navigation }) => {
@@ -23,7 +24,8 @@ const ListTasks = ({ route, navigation }) => {
 
     //console.log(planId)
 
-    const {planId, goalId, updateCurrentTaskId} = useContext(PlanContext)
+    const {planId, goalId, taskId,  updateCurrentTaskId} = useContext(PlanContext)
+    //const {goalId} = useContext(PlanContext)
 
     const [tasks, setTasks] = useState([]);
     const [goalStartDate, setGoalStartDate] = useState('');
@@ -51,46 +53,65 @@ const ListTasks = ({ route, navigation }) => {
     useEffect(() => {
         getGoal();
         getTasks();
-    },[navigation])
+        //settaskCount(1)
+    },[navigation,taskId])
 
     const getGoal = async () => {
-
-        await fetch(Endpoints.goal + goalId, {
-
-            method: "get",
-            headers: {
-                'Content-Type':
-                    'application/x-www-form-urlencoded;charset=UTF-8',
-            }
+        
+        const url = Endpoints.goal + "?goal_id=" + goalId
+        //console.log(url)
+        await getItems(url).then((data) => {
+            //console.log(data[0])
+            setGoalStartDate(data[0].goal_start_date)
+            setGoalEndDate(data[0].goal_end_date)
+            setGoalName(data[0].goal_name)
+            setLoading(false)
         })
-            .then((response) => response.json())
-            .then((json) => {
-                setGoalStartDate(json.data.goal_start_date);
-                setGoalEndDate(json.data.goal_end_date);
-                setGoalName(json.data.goal_name);
-                setLoading(false);
-            })
-            .catch((error) => console.error(error))
+
+        // await fetch(Endpoints.goal + "?goal_id=" + goalId, {
+
+        //     method: "get",
+        //     headers: {
+        //         'Content-Type':
+        //             'application/x-www-form-urlencoded;charset=UTF-8',
+        //     }
+        // })
+        //     .then((response) => response.json())
+        //     .then((json) => {
+        //         setGoalStartDate(json.data.goal_start_date);
+        //         setGoalEndDate(json.data.goal_end_date);
+        //         setGoalName(json.data.goal_name);
+        //         setLoading(false);
+        //     })
+        //     .catch((error) => console.error(error))
 
     };
 
     const getTasks = async () => {
 
-        await fetch(Endpoints.tasks + goalId, {
-
-            method: "get",
-            headers: {
-                'Content-Type':
-                    'application/x-www-form-urlencoded;charset=UTF-8',
-            }
+        const url = Endpoints.tasks + "?goal_id=" + goalId
+        //console.log(url)
+        await getItems(url).then((data) => {
+            //console.log(data)
+            setTasks(data);
+            setLoading(false);
         })
-            .then((response) => response.json())
-            .then((json) => {
-                setTasks(json.data);
-                setLoading(false);
-                //console.log(json.data);
-            })
-            .catch((error) => console.error(error))
+
+        // await fetch(Endpoints.tasks + "?goal_id=" + goalId, {
+
+        //     method: "get",
+        //     headers: {
+        //         'Content-Type':
+        //             'application/x-www-form-urlencoded;charset=UTF-8',
+        //     }
+        // })
+        //     .then((response) => response.json())
+        //     .then((json) => {
+        //         setTasks(json.data);
+        //         setLoading(false);
+        //         //console.log(json.data);
+        //     })
+        //     .catch((error) => console.error(error))
 
     };
 

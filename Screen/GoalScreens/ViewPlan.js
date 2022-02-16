@@ -21,24 +21,22 @@ const ViewPlan = ({ route, navigation }) => {
 
   const { planId, updateCurrentPlanId } = useContext(PlanContext);
   const { theme, userId } = useContext(GlobalContext);
+  //const  planId = typeof route.params == 'undefined' ? 0 : route.params.planId;
 
-  //console.log(route)
-  //console.log(planId)
 
   const getPlan = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
 
-    let viewPlan = Endpoints.active_plan + user_id;
+    let viewPlan = Endpoints.active_plan + '?user_id=' + user_id + "&plan_status=1";
 
     if (planId > 0) {
-      viewPlan = Endpoints.get_plan + planId;
+      viewPlan = Endpoints.active_plan + "?user_id=" + user_id + "&plan_id=" + planId;
     }
 
     await getItems(viewPlan).then((data) => {
-      //console.log(user_id);
       setPlan(data);
       setLoading(false);
-      updateCurrentPlanId(is_valid_object(data) ? data.plan_id : 0);
+      updateCurrentPlanId(data.plan_id)
     });
   };
 
@@ -55,20 +53,12 @@ const ViewPlan = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    //const unsubscribe = navigation.addListener("focus", () => {
+
     getPlan();
     getStatistics()
-    //});
 
-    //return () => {
-    // Unsubscribe for the focus Listener
-    //unsubscribe;
-    //};
-  }, [navigation, planId, dueTasksCount, goalsCount, overdueTasksCount, tasksCount]);
+  }, [navigation,planId]); //navigation, planId, dueTasksCount, goalsCount, overdueTasksCount, tasksCount
 
-  // const is_valid_object = (obj) => {
-  //   return typeof obj == "object" && obj != null;
-  // };
 
   if (!is_valid_object(plan)) {
     return (
