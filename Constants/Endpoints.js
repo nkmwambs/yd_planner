@@ -6,6 +6,7 @@ export default {
     dashboard_statistics: api_url + "dashboard/api_result/dashboard_statistics/",
     themes: api_url + "theme/api_result/themes/",
     add_goal: api_url + "goal/api_result/add_goal/",
+    edit_goal: api_url + "goal/api_result/edit_goal/",
     add_plan: api_url + "plan/api_result/add_plan/",
     get_goal: api_url + "goal/api_result/goal/",
     add_task: api_url + 'task/api_result/add_task/',

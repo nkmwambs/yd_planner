@@ -16,11 +16,10 @@ import Endpoints from "../../Constants/Endpoints";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { PlanContext } from "../../Context/PlanContext";
-
-import PlannerDatePicker from "../Components/PlannerDatePicker";
 import PlannerButton from "../Components/PlannerButton";
 import getItems from '../../Functions/getItems'
-// import { useNavigation } from "@react-navigation/native";
+import postItem from '../../Functions/postItem'
+//import { useNavigation } from "@react-navigation/native";
 
 const AddGoal = ({ route, navigation }) => {
   const [goalThemeId, setGoalThemeId] = useState(0);
@@ -36,23 +35,50 @@ const AddGoal = ({ route, navigation }) => {
   const [planStartDate, setPlanStartDate] = useState('');
   const [planEndDate, setPlanEndDate] = useState('');
 
-  //const [quarterStartDate, setQuarterStartDate] = useState('2021-07-01');
-  //const [quarterEndDate, setQuarterEndDate] = useState('2021-09-30');
-
   const [quarters, setQuarters] = useState([]);
 
-  //const { planId } = route.params;
-
   const {updateCurrentGoalId, planId, statisticsChanged, updateStatisticsChanged} = useContext(PlanContext);
-  //const { planId } = route.params;
+  const { goalId } = route.params;
+  const [editModeOn, setEditModeOn] = useState(false)
 
-  //const navigation = useNavigation();
+  //const nav = useNavigation();
+
+  const updateNavigationStackTitle = () => {
+    if(goalId > 0){
+      navigation.setOptions({ title: 'Edit a Goal' })
+    }
+  }
 
   useEffect(() => {
-    getPlan();
-    getThemes();
+    
+    getPlan()
+    getThemes()
     getQuarters()
+    toggleEditMode()
+    getGoal()
+    updateNavigationStackTitle()
   },[navigation]);
+
+  const toggleEditMode = ()=>{
+    goalId > 0 ? setEditModeOn(true) : setEditModeOn(false)
+  }
+
+  const getGoal = async () => {
+    if( goalId > 0){
+      const url = Endpoints.get_goal + "?goal_id=" + goalId;
+    
+      await getItems(url).then((data) => {
+          const goal = data[0]
+
+          setGoalTitle(goal.goal_name)
+          setGoalDescription(goal.goal_description)
+          setGoalTheme(goal.theme_name)
+          setGoalThemeId(goal.theme_id)
+          setQuarterNumber(goal.goal_period)
+          
+      })
+    }
+  }
 
   const getThemes = async () => {
     fetch(Endpoints.themes, {
@@ -64,6 +90,8 @@ const AddGoal = ({ route, navigation }) => {
       .then((response) => response.json())
       .then((json) => {
         setthemeDetails(json.data);
+        //console.log(goalId)
+        //console.log(JSON.stringify(route))
       })
       .catch((error) => console.error(error));
   };
@@ -95,42 +123,48 @@ const AddGoal = ({ route, navigation }) => {
   };
 
     const getPlan = async () => {
+
         const url = Endpoints.get_plan + "?plan_id=" +  planId
-        //console.log(url)
+
         await getItems(url).then((data) => {
             setPlanStartDate(data.plan_start_date);
             setPlanEndDate(data.plan_end_date);
-            //console.log(data.plan_start_date + " " + data.plan_end_date)
             setLoading(false);
         })
-
-      // await fetch(Endpoints.get_plan + "?plan_id=" +  planId, {
-
-      //     method: "get",
-      //     headers: {
-      //         'Content-Type':
-      //             'application/x-www-form-urlencoded;charset=UTF-8',
-      //     }
-      // })
-      //     .then((response) => response.json())
-      //     .then((json) => {
-      //         console.log(json.data.plan_start_date)
-      //         console.log(json.data.plan_end_date)
-      //         setPlanStartDate(json.data.plan_start_date);
-      //         setPlanEndDate(json.data.plan_end_date);
-      //         //setGoalName(json.data.goal_name);
-      //         setLoading(false);
-
-      //         //console.log(json.data.plan_start_date + ' => ' + json.data.plan_end_date);
-              
-      //     })
-      //     .catch((error) => console.error(error))
-
   }
 
-  const handleSubmitButton = () => {
-    //setErrortext("");
+  const onUpdateYesPress = async() => {
+    const url = Endpoints.edit_goal + "?goal_id=" + goalId
+    const user_id = await AsyncStorage.getItem("user_id")
+    const dataToSend = {
+        goal_name: goalTitle,
+        theme_id: goalThemeId,
+        goal_description: goalDescription,
+        goal_period: quarterNumber,
+        plan_id: planId,
+        user_id: user_id,
+        goal_last_modified_by: user_id,
+        //goal_created_by: user_id,
+        //goal_created_date: new Date().toISOString().slice(0, 10),
+    }
 
+    await postItem(url,dataToSend)
+      .then((data) => {
+
+        const response_goal_id = data["goal_id"];
+        statisticsChanged ? updateStatisticsChanged(false) :  updateStatisticsChanged(true);
+        updateCurrentGoalId(response_goal_id)
+        navigation.navigate("ListGoals")
+
+      })
+  }
+
+  const onUpdateCancelPress = () => {
+    //console.log("Not updated")
+    alert("Request aborted")
+  }
+  
+  const handleEditButton = () => {
     if (!goalTitle) {
       alert("Please fill Goal Title");
       return;
@@ -151,99 +185,103 @@ const AddGoal = ({ route, navigation }) => {
       return;
     }
 
-    Alert.alert("Confirmation", "Are you sure you want to submit this goal?", [
+    const confirmation_message = "Are you sure you want to update this goal?"
+
+    setLoading(true);
+    
+    Alert.alert("Confirmation", confirmation_message, [
       {
         text: "Yes",
-        onPress: async () => {
-          
-          const user_id = await AsyncStorage.getItem("user_id");
-
-          //setLoading(false);
-          setLoading(true);
-
-          var dataToSend = {
-            goal_name: goalTitle,
-            theme_id: goalThemeId,
-            goal_description: goalDescription,
-            //goal_start_date: goalStartDate,
-            //goal_end_date: goalEndDate,
-            goal_period: quarterNumber,
-            plan_id: planId,
-            user_id: user_id,
-            goal_last_modified_by: user_id,
-            goal_created_by: user_id,
-            goal_created_date: new Date().toISOString().slice(0, 10),
-          };
-
-          //console.log(dataToSend);
-
-          var formBody = [];
-
-          for (var key in dataToSend) {
-            var encodedKey = encodeURIComponent(key);
-            var encodedValue = encodeURIComponent(dataToSend[key]);
-            formBody.push(encodedKey + "=" + encodedValue);
-          }
-          formBody = formBody.join("&");
-
-          await fetch(Endpoints.add_goal, {
-            method: "POST",
-            body: formBody,
-            headers: {
-              //Header Defination
-              "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-            },
-          })
-            .then((response) => response.json())
-            .then((responseJson) => {
-              //Hide Loader
-              setLoading(false);
-
-              //console.log(responseJson);
-              // If server response message same as Data Matched
-              if (responseJson.status === "success") {
-                //setIsRegistraionSuccess(true);
-                const response_goal_id = responseJson.data["goal_id"];
-                const goalCount = responseJson.data["goal_count"];
-                // navigation.navigate("ListTasks", {
-                //   goal_id: response_goal_id,
-                //   isGoalAddFormInStack: true,
-                // });
-                // console.log(
-                //     'Goal Submitted Successfully'
-                // );
-                statisticsChanged ? updateStatisticsChanged(false) :  updateStatisticsChanged(true);
-                updateCurrentGoalId(response_goal_id)
-                navigation.navigate("ListTasks")
-              } else {
-                //setErrortext(responseJson.msg);
-              }
-            })
-            .catch((error) => {
-              //Hide Loader
-              setLoading(false);
-              console.error(error);
-            });
-        },
+        onPress: onUpdateYesPress
       },
       {
         text: "Cancel",
-        onPress: () => {
-          //console.log("Cancel Pressed");
-        },
+        onPress: onUpdateCancelPress,
         style: "cancel",
       },
-    ]);
-  };
+    ])
+    
+    setLoading(false);
+  }
 
-  // const Quarters = [
-  //   {quarter_number: 1, quarter_name: 'First Quarter'},
-  //   {quarter_number: 2, quarter_name: 'Second Quarter'},
-  //   {quarter_number: 3, quarter_name: 'Third Quarter'},
-  //   {quarter_number: 4, quarter_name: 'Fourth Quarter'}
-  // ];
+  // const formValidation = () => {
+    
+  // }
 
+  const onSubmitYesPress = async () => {
 
+    const url = Endpoints.add_goal
+    const user_id = await AsyncStorage.getItem("user_id")
+    const dataToSend = {
+        goal_name: goalTitle,
+        theme_id: goalThemeId,
+        goal_description: goalDescription,
+        goal_period: quarterNumber,
+        plan_id: planId,
+        user_id: user_id,
+        goal_last_modified_by: user_id,
+        goal_created_by: user_id,
+        goal_created_date: new Date().toISOString().slice(0, 10),
+    }
+
+    await postItem(url,dataToSend)
+      .then((data) => {
+
+        const response_goal_id = data["goal_id"];
+        statisticsChanged ? updateStatisticsChanged(false) :  updateStatisticsChanged(true);
+        updateCurrentGoalId(response_goal_id)
+        navigation.navigate("ListTasks")
+
+      })
+  }
+
+  const onSubmitCancelPress = () => {
+    alert("Request aborted");
+  }
+
+  const handleSubmitButton = async ()  => {
+
+      // formValidation()
+
+      if (!goalTitle) {
+        alert("Please fill Goal Title");
+        return;
+      }
+  
+      if (!goalTheme) {
+        alert("Please choose a Theme");
+        return;
+      }
+  
+      if (!goalDescription) {
+        alert("Please fill Goal Description");
+        return;
+      }
+  
+      if (quarterNumber == 0) {
+        alert("Please fill Goal Period");
+        return;
+      }
+
+      const confirmation_message = "Are you sure you want to submit this goal?"
+
+      setLoading(true)
+
+      Alert.alert("Confirmation", confirmation_message, [
+        {
+          text: "Yes",
+          onPress: onSubmitYesPress
+        },
+        {
+          text: "Cancel",
+          onPress: onSubmitCancelPress,
+          style: "cancel",
+        },
+      ])
+
+      setLoading(false)
+      
+  }
 
   const renderQuarters = () => {
     return quarters.map((quarter) => {
@@ -270,13 +308,14 @@ const AddGoal = ({ route, navigation }) => {
       >
         <KeyboardAvoidingView enabled>
           <GoalTextInput
+            value={editModeOn ? goalTitle: null}
             onChangeText={(goalTitle) => setGoalTitle(goalTitle)}
             placeholder="Goal Title"
             numberOfLines={5}
           />
 
           <GoalPicker
-            selectedValue={goalTheme}
+            selectedValue={editModeOn ? goalThemeId: goalTheme}
             onValueChange={(itemValue, itemIndex) => {
               setGoalTheme(itemValue);
               setGoalThemeId(itemIndex);
@@ -287,6 +326,7 @@ const AddGoal = ({ route, navigation }) => {
           />
 
           <GoalTextInput
+            value={editModeOn ? goalDescription: null}
             onChangeText={(goalDescription) =>
               setGoalDescription(goalDescription)
             }
@@ -294,20 +334,12 @@ const AddGoal = ({ route, navigation }) => {
             numberOfLines={5}
           />
 
-          {/* <PlannerDatePicker
-            inputLabel="Choose Start Date"
-            datePosition="start"
-          />
-
-          <PlannerDatePicker inputLabel="Choose end Date" datePosition="end" /> */}
-
           <GoalPicker
-            selectedValue={quarterName}
+      
+            selectedValue={editModeOn ? quarterNumber : quarterName}
             onValueChange={(itemValue, itemIndex) => {
               setQuarterName(itemValue);
               setQuarterNumber(itemIndex);
-              //changeStartDate(quarterStartDate)
-              //changeEndDate(quarterEndDate)
             }}
             pickerLabel="Please choose a period"
             renderItems={renderQuarters()}
@@ -315,8 +347,8 @@ const AddGoal = ({ route, navigation }) => {
 
           <PlannerButton
             error="Error occurred"
-            buttonLabel="Add a Goal"
-            onClick={handleSubmitButton}
+            buttonLabel={editModeOn ? "Edit Goal": "Add a Goal"}//"Add a Goal"
+            onClick={editModeOn ? handleEditButton : handleSubmitButton}
           />
 
           

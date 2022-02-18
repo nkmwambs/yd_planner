@@ -57,7 +57,7 @@ const GoalListItem = ({ goal }) => {
             text: "Edit Goal",
             onPress: () => {
               //alert("Feature under construction");
-              navigation.navigate("EditGoal", { goalId: goal.goal_id })
+              navigation.navigate("AddGoal", { goalId: goal.goal_id })
             },
           },
           {

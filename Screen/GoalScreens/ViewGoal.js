@@ -101,6 +101,9 @@ const ViewGoal = ({ route, navigation }) => {
           },
           { title: "Created On", value: goal.goal_created_date },
         ],
+        [
+          { title: "Theme", value: goal.theme_name },
+        ],
       ],
     },
     {

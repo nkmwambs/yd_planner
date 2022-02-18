@@ -22,6 +22,7 @@ const GoalTextInput = (props) => {
                 //     emailInputRef.current && emailInputRef.current.focus()
                 // }
                 blurOnSubmit={false}
+                value={typeof props.value !== 'undefined' ? props.value : this.onChangeText}
             />
         </View>
     )

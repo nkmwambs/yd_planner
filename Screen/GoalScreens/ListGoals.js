@@ -16,7 +16,8 @@ const ListGoals = ({ route, navigation }) => {
     const [loading, setLoading] = useState(true);
     const {theme} = useContext(GlobalContext)
 
-    const {planId} = useContext(PlanContext)
+    const {planId, statisticsChanged} = useContext(PlanContext)
+
     //const { planId } = route.params;
 
     const getGoals = async () => {
@@ -32,16 +33,8 @@ const ListGoals = ({ route, navigation }) => {
     }
 
     useEffect(() => {
-
-        //const unsubscribe = navigation.addListener('focus', () => {
-          getGoals();
-        //});
-
-        // return () => {
-        //     // Unsubscribe for the focus Listener
-        //     unsubscribe;
-        // };
-    },[navigation])
+        getGoals();
+    },[navigation, statisticsChanged ])
 
 
     const renderItem = ({ item }) => {
