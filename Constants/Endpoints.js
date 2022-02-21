@@ -24,5 +24,6 @@ export default {
     update_task_status: api_url + "task/api_result/update_task_status/",
     goal_statistics: api_url + "goal/api_result/goal_statistics/",
     get_quarters: api_url + "goal/api_result/quarters/", 
+    delete_goal: api_url + "goal/api_result/delete_goal/", 
     //language: api_url + "user/api_result/language_phrases/"
 }

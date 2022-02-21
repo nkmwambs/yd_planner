@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, FlatList, StyleSheet } from 'react-native'
+import { View, FlatList, StyleSheet,Dimensions, Text } from 'react-native'
 import Loader from '../Components/Loader'
 import FloatActionButton from '../Components/FloatActionButton'
 import Endpoints from '../../Constants/Endpoints'
@@ -7,7 +7,7 @@ import GoalListItem from './Components/GoalListItem'
 import getItems from '../../Functions/getItems'
 import { GlobalContext } from '../../Context/GlobalContext'
 import { PlanContext } from '../../Context/PlanContext'
-import EmptyPlaceholder from '../Components/EmptyPlaceholder'
+// import EmptyPlaceholder from '../Components/EmptyPlaceholder'
 
 
 const ListGoals = ({ route, navigation }) => {
@@ -17,6 +17,8 @@ const ListGoals = ({ route, navigation }) => {
     const {theme} = useContext(GlobalContext)
 
     const {planId, statisticsChanged} = useContext(PlanContext)
+    const [isFetching, setIsFetching] = useState(false)
+    const [goalId, setGoalId] = useState(0)
 
     //const { planId } = route.params;
 
@@ -27,7 +29,7 @@ const ListGoals = ({ route, navigation }) => {
             //console.log(data)
             setGoals(data)
             setLoading(false)
-            //console.log(data)
+            setIsFetching(false);
         })
 
     }
@@ -35,46 +37,61 @@ const ListGoals = ({ route, navigation }) => {
     useEffect(() => {
         getGoals();
     },[navigation, statisticsChanged ])
+    
 
 
     const renderItem = ({ item }) => {
+        
         return (
-
             <GoalListItem
                 goal={item}
+                goalDeletionHandler={goalDeletionHandler}
             />
-
         )
     }
 
-    if(goals.length == 0){
-        return (
-            <View style={[styles.container,{backgroundColor:theme.listContentBackgroundColor}]}>
-                {
-                    loading ? <Loader loading={loading} /> : <EmptyPlaceholder
-                    placeholderText="You have no Goals Created"
-                    buttonLabel = "Add a Goal"
-                    onClickHandler={() => {
-                      navigation.navigate("AddGoal",{planId:planId});
-                    }}
-                  />
-                }
-            
+    const goalDeletionHandler = async(id) => {
+
+        const url = Endpoints.delete_goal + "?goal_id=" + id; 
         
-        </View>
+        await getItems(url).then((data) => {
+            onRefresh()  
+        })
+
+        
+    }
+
+    const onRefresh =  () => {
+        setIsFetching(true);  
+        getGoals()    
+    }
+
+    const EmptyList = () => {
+        return (
+            <View style={{ flex:1,height: Dimensions.get("window").height/2,
+            alignItems: "center", justifyContent:"center", backgroundColor: "white"}}>
+                <Text style={{ fontSize: 25, fontWeight: "bold" }}>You have no goals available</Text>  
+            </View>
         )
     }
+    
 
 
     return (
         <View style={[styles.container,{backgroundColor:theme.listContentBackgroundColor}]}>
             {
-                loading ? <Loader loading={loading} /> : <FlatList
-                style={{ elevation: 1 }}
-                keyExtractor={(item) => item.goal_id}
-                data={goals}
-                renderItem={renderItem}
-            />
+                loading ? <Loader loading={loading} /> : 
+                
+                <FlatList
+                    style={{ elevation: 1 }}
+                    keyExtractor={(item) => item.goal_id}
+                    data={goals}
+                    renderItem={renderItem}
+                    onRefresh={onRefresh}
+                    refreshing={isFetching}
+                    extraData={goalId}
+                    ListEmptyComponent={<EmptyList/>}
+                />
             }
             
             

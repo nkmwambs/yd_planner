@@ -55,9 +55,10 @@ const AddGoal = ({ route, navigation }) => {
     getThemes()
     getQuarters()
     toggleEditMode()
-    getGoal()
     updateNavigationStackTitle()
+    getGoal()
   },[navigation]);
+
 
   const toggleEditMode = ()=>{
     goalId > 0 ? setEditModeOn(true) : setEditModeOn(false)
@@ -75,6 +76,7 @@ const AddGoal = ({ route, navigation }) => {
           setGoalTheme(goal.theme_name)
           setGoalThemeId(goal.theme_id)
           setQuarterNumber(goal.goal_period)
+          //console.log(goal.goal_period)
           
       })
     }
@@ -299,6 +301,7 @@ const AddGoal = ({ route, navigation }) => {
 
     <View style={{ flex: 1 }}>
       <Loader loading={loading} />
+      {/* {console.log("=>" + quarterNumber)} */}
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
@@ -336,7 +339,7 @@ const AddGoal = ({ route, navigation }) => {
 
           <GoalPicker
       
-            selectedValue={editModeOn ? quarterNumber : quarterName}
+            selectedValue={editModeOn ? parseInt(quarterNumber) : quarterName} 
             onValueChange={(itemValue, itemIndex) => {
               setQuarterName(itemValue);
               setQuarterNumber(itemIndex);

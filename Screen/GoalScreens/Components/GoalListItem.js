@@ -1,15 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext } from "react";
-import { Alert, View, Text, StyleSheet } from "react-native";
+import React, { useContext, useEffect } from "react";
+import { Alert, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { ListItem, Icon } from "react-native-elements";
 import Colors from "../../../Constants/Colors";
 import { PlanContext } from "../../../Context/PlanContext";
 import ContentRow from "./ContentRow";
 import PlannerBadge from "../../Components/PlannerBadge";
 
-const GoalListItem = ({ goal }) => {
+const GoalListItem = ({ goal, goalDeletionHandler }) => {
   const navigation = useNavigation();
   const { updateCurrentGoalId } = useContext(PlanContext);
+
+  //useEffect(updateGoalId,[])
 
   const compute_goal_status = () => {
       let status = 'New'
@@ -21,8 +23,10 @@ const GoalListItem = ({ goal }) => {
 
       if(goal.count_inprogress_tasks > 0){
         status = 'In Progress'
-      }else if(goal.count_new_tasks == goal.count_completed_tasks){
-        status = 'Completed'
+      }else if(goal.count_completed_tasks > 0 && goal.count_new_tasks == 0 ){
+        status = 'Completed';
+      }else if(goal.count_new_tasks == 0 && goal.count_completed_tasks == 0 && goal.count_inprogress_tasks == 0){
+        status = 'No tasks available'
       }
 
       return status
@@ -38,10 +42,6 @@ const GoalListItem = ({ goal }) => {
         elevation: 5,
         borderColor: Colors.mainBackgroundColor,
         borderWidth: 2,
-      }}
-      onPress={() => {
-        updateCurrentGoalId(goal.goal_id);
-        navigation.navigate("ViewGoal");
       }}
       onLongPress={() => {
         Alert.alert("Confirmation", "Please choose the action to perform", [
@@ -69,38 +69,106 @@ const GoalListItem = ({ goal }) => {
     >
       <ListItem.Content>
         <ListItem.Title style={{ marginBottom: 20 }}>
-          <View
-            style={{
-              borderBottomColor: "black",
-              borderBottomWidth: 1,
-              borderStyle: "solid",
-            }}
-          >
-            <Text style={{ fontWeight: "bold" }}>{goal.goal_name}</Text>
+          <View>
+            <View
+              style={{
+                // borderBottomColor: "black",
+                // borderBottomWidth: 1,
+                // borderStyle: "solid",
+                // marginBottom: 10,
+                marginBottom:15
+              }}
+            >
+              <Text style={{ fontWeight: "bold" }}>{goal.goal_name}</Text>
+            </View>
+
+            <View style={{
+              flex:1,
+              flexDirection: "row"
+            }}>
+              <TouchableOpacity 
+                  style={styles.actionStyle} 
+                  onPress={() => {
+                    updateCurrentGoalId(goal.goal_id)
+                    navigation.navigate("ViewGoal")
+                  }}
+              >
+                {/* <Text>Open</Text> */}
+                <Icon type="font-awesome" name="folder-open" size={15} />
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                  style={styles.actionStyle} 
+                  onPress={() => {
+                    navigation.navigate("AddGoal", { goalId: goal.goal_id })
+                  }}
+              >
+                {/* <Text>Edit</Text> */}
+                <Icon type="font-awesome" name="pencil" size={15} />
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                  style={styles.actionStyle} 
+                  onPress={() => {
+                    //console.log("Delete Goal")
+                    Alert.alert("Confirmation", "Are you sure you want to delete this goal", [
+                      {
+                        text: "Delete Goal",
+                        onPress: () => goalDeletionHandler(goal.goal_id),
+                      },
+                      {
+                        text: "Cancel",
+                        onPress: () => {
+                          console.log('Goal deletion cancelled')
+                  
+                        },
+                      }
+                    ])
+
+                  }}
+              >
+                <Icon type="font-awesome" name="trash" size={15} />
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                  style={styles.actionStyle}
+                  onPress={() => {
+                    updateCurrentGoalId(goal.goal_id)
+                    navigation.navigate("AddTask")
+                  }} 
+              >
+                {/* <Text>Add Task</Text> */}
+                <Icon type="font-awesome" name="plus" size={15} />
+              </TouchableOpacity>
+
+            </View>
           </View>
         </ListItem.Title>
 
         <View style={{ flexDirection: "row", marginBottom: 10 }}>
+          
           <PlannerBadge
             containerStyle={styles.badgeContainerStyle}
             style={styles.badgeTextStyle}
-            text={"All: " + goal.count_of_tasks}
+            text={"N: " + goal.count_new_tasks}
           />
           <PlannerBadge
             containerStyle={styles.badgeContainerStyle}
             style={styles.badgeTextStyle}
-            text={"New: " + goal.count_new_tasks}
+            text={"P: " + goal.count_inprogress_tasks}
           />
           <PlannerBadge
             containerStyle={styles.badgeContainerStyle}
             style={styles.badgeTextStyle}
-            text={"Progress: " + goal.count_inprogress_tasks}
+            text={"C: " + goal.count_completed_tasks}
           />
+
           <PlannerBadge
             containerStyle={styles.badgeContainerStyle}
             style={styles.badgeTextStyle}
-            text={"Complete: " + goal.count_completed_tasks}
+            text={"S: " + goal.count_suspended_tasks}
           />
+
         </View>
 
         {/* <View style={{ paddingTop: 5 }}> */}
@@ -136,5 +204,6 @@ const styles = StyleSheet.create({
         marginRight: 5,
         padding: 5,
         borderRadius: 5,
-    }
+    },
+    actionStyle:{marginRight:25}
 })
