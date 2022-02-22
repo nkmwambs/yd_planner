@@ -1,17 +1,15 @@
 import React, { useRef } from "react";
 import {
-    SafeAreaView,
     ScrollView,
     Text,
     StyleSheet,
     View,
-    ImageBackground,
     Animated,
     useWindowDimensions,
     Dimensions
 } from "react-native";
 
-const images = new Array(6).fill('https://images.unsplash.com/photo-1556740749-887f6717d7e4');
+// const images = new Array(6).fill('https://images.unsplash.com/photo-1556740749-887f6717d7e4');
 
 const NoteSlider = ({ notes }) => {
     const scrollX = useRef(new Animated.Value(0)).current;

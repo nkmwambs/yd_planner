@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, StyleSheet, Text, Image } from "react-native";
-import { ListItem, Avatar, Icon, Divider, Card, Button } from 'react-native-elements'
+import { View, StyleSheet, Text } from "react-native";
+import { ListItem, Icon, Card, Button } from 'react-native-elements'
 
 const AnnouncementItem = (props) => {
     return (

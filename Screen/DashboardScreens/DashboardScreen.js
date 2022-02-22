@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react'
 import {
     StyleSheet,
-    SafeAreaView,
     ScrollView,
     BackHandler,
     Alert,
 } from "react-native";
-
+import SafeAreaView from 'react-native-safe-area-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -21,8 +20,6 @@ import UserAvatar from '../DashboardScreens/UserAvatar'
 
 import {GlobalContext} from '../../Context/GlobalContext'
 import { PlanContext } from "../../Context/PlanContext";
-
-import {is_valid_object} from "../../Functions/helpers"
 
 export default DashboardScreen = ({ navigation }) => {
 

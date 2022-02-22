@@ -6,7 +6,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import StoryListScreen from '../StoryScreens/StoryListScreen';
 import AddStory from '../StoryScreens/AddStory';
-import NavigationDrawerHeader from '../Components/NavigationDrawerHeader'
 
 import Strings from '../../Constants/Strings/en'
 

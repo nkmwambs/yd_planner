@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity } from 'react-native'
 import { ListItem } from 'react-native-elements'
 
 const TaskNoteListItem = (props) => {

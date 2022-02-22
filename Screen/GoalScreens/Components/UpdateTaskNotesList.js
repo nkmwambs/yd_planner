@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native'
+import React from 'react';
+import { View, FlatList, TouchableOpacity } from 'react-native'
 import TaskNoteListItem from './TaskNoteListItem'
-import Endpoints from '../../../Constants/Endpoints'
 import { useNavigation } from '@react-navigation/native'
 
 const UpdateTaskNotesList = (props) => {

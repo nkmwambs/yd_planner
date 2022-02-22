@@ -1,28 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Icon } from "react-native-elements";
 import {
   View,
   StyleSheet,
   Text,
-  SafeAreaView,
-  ScrollView,
-  TextInput,
   TouchableOpacity,
-  Dimensions,
-  FlatList,
 } from "react-native";
 
-import Colors from "../../Constants/Colors";
 import Endpoints from "../../Constants/Endpoints";
-import Strings from "../../Constants/Strings/en";
-import LoadingIndicator from "../Components/LoadingIndicator";
 import getItems from '../../Functions/getItems'
-import { useNavigation } from "@react-navigation/native";
 
 import UpdateTaskHeader from "./Components/UpdateTaskHeader";
-import UpdateTaskNotesList from "./Components/UpdateTaskNotesList";
-import UpdateTaskInput from "./Components/UpdateTaskInput";
-import FloatActionButton from "../Components/FloatActionButton";
 import TaskNoteListItem from "../GoalScreens/Components/TaskNoteListItem";
 import Loader from "../Components/Loader";
 import NoteSlider from "./Components/NoteSlider";

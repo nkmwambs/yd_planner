@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { TextInput, StyleSheet, View, TouchableOpacity } from 'react-native'
-import styled from "styled-components";
 import Colors from '../../../Constants/Colors'
 import { Icon } from 'react-native-elements'
 

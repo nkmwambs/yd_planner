@@ -5,7 +5,7 @@ import {
     StyleSheet, 
     Text, 
     BackHandler, 
-    Alert } from "react-native";
+     } from "react-native";
 
 import Strings from '../../Constants/Strings/en'
 

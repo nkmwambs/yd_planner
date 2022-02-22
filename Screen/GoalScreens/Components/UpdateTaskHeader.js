@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, StyleSheet, Text } from "react-native";
-
-import Colors from "../../../Constants/Colors";
+import { View } from "react-native";
 import Endpoints from "../../../Constants/Endpoints";
-import Strings from "../../../Constants/Strings/en";
 import LoadingIndicator from "../../Components/LoadingIndicator";
 import TaskCard from "./TaskCard";
 import getItems from '../../../Functions/getItems'

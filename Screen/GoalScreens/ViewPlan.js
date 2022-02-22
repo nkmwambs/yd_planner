@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import getItems from "../../Functions/getItems";
 import {is_valid_object} from "../../Functions/helpers"
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,7 +10,7 @@ import EmptyPlaceholder from "../Components/EmptyPlaceholder";
 import { PlanContext } from "../../Context/PlanContext";
 import { GlobalContext } from "../../Context/GlobalContext";
 
-const ViewPlan = ({ route, navigation }) => {
+const ViewPlan = ({  navigation }) => {
   const [plan, setPlan] = useState({});
   const [loading, setLoading] = useState(true);
 

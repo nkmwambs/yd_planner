@@ -3,7 +3,8 @@
 
 // Import React and Component
 import React from 'react';
-import { View, Text, SafeAreaView } from 'react-native';
+import { View, Text } from 'react-native';
+import SafeAreaView from 'react-native-safe-area-view';
 
 const SettingsScreen = () => {
     return (

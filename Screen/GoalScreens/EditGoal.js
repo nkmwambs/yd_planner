@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text,StyleSheet, TextInput, KeyboardAvoidingView} from 'react-native'
+import { StyleSheet, KeyboardAvoidingView} from 'react-native'
 // import Upcoming from '../Components/Upcoming'
 import { Picker } from "@react-native-picker/picker";
 import getItems from "../../Functions/getItems"

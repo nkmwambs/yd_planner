@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { View, FlatList, StyleSheet } from 'react-native'
 import Loader from '../Components/Loader'
-import FloatActionButton from '../Components/FloatActionButton'
 import Endpoints from '../../Constants/Endpoints'
 import PlanListItem from './Components/PlanListItem'
 import AsyncStorage from '@react-native-async-storage/async-storage';

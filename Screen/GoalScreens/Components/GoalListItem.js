@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Alert, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { ListItem, Icon } from "react-native-elements";
 import Colors from "../../../Constants/Colors";
@@ -11,7 +11,6 @@ const GoalListItem = ({ goal, goalDeletionHandler }) => {
   const navigation = useNavigation();
   const { updateCurrentGoalId } = useContext(PlanContext);
 
-  //useEffect(updateGoalId,[])
 
   const compute_goal_status = () => {
       let status = 'New'
