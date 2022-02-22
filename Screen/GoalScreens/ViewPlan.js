@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View } from "react-native";
+import { View, RefreshControl, ScrollView } from "react-native";
 import getItems from "../../Functions/getItems";
 import {is_valid_object} from "../../Functions/helpers"
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,19 +10,30 @@ import EmptyPlaceholder from "../Components/EmptyPlaceholder";
 import { PlanContext } from "../../Context/PlanContext";
 import { GlobalContext } from "../../Context/GlobalContext";
 
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 const ViewPlan = ({  navigation }) => {
   const [plan, setPlan] = useState({});
   const [loading, setLoading] = useState(true);
-
   const [dueTasksCount, setDueTasksCount] = useState(0)
   const [goalsCount,setGoalsCount] = useState(0)
   const [overdueTasksCount,setOverdueTasksCount] = useState(0)
   const [tasksCount,setTasksCount] = useState(0)
-
   const { planId, updateCurrentPlanId, statisticsChanged } = useContext(PlanContext);
-  const { theme, userId } = useContext(GlobalContext);
-  //const  planId = typeof route.params == 'undefined' ? 0 : route.params.planId;
+  const { theme } = useContext(GlobalContext);
+  const [refreshing, setRefreshing] = React.useState(false);
 
+
+  // This function loses the planId set by the context thus leading to no statistics
+  const onRefresh = React.useCallback(() => {
+      setRefreshing(true);
+      // getPlan()
+      // getStatistics()
+      // console.log(planId)
+      wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   const getPlan = async () => {
     const user_id = await AsyncStorage.getItem("user_id");
@@ -129,27 +140,38 @@ const ViewPlan = ({  navigation }) => {
   ];
 
   return (
-    <View
-      style={[
-        { flex: 1 },
-        { backgroundColor: theme.listContentBackgroundColor },
-      ]}
-    >
-      {loading ? (
-        <Loader loading={loading} />
-      ) : (
-        <PlannerView
-          data={DATA}
-          showNavButtons={true}
-          onLeftbackPress={() => navigation.navigate("ListPlans")}
-          onRightButtonPress={() =>
-            navigation.navigate("ListGoals", { planId: plan.plan_id })
+    <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
           }
-          leftButtonTitle="All Plans"
-          rightButtonTitle="Plan Goals"
-        />
-      )}
-    </View>
+        >
+        <View
+          style={[
+            { flex: 1 },
+            { backgroundColor: theme.listContentBackgroundColor },
+          ]}
+        >
+          {loading ? (
+            <Loader loading={loading} />
+          ) : (
+            
+              <PlannerView
+                data={DATA}
+                showNavButtons={true}
+                onLeftbackPress={() => navigation.navigate("ListPlans")}
+                onRightButtonPress={() =>
+                  navigation.navigate("ListGoals", { planId: plan.plan_id })
+                }
+                leftButtonTitle="All Plans"
+                rightButtonTitle="Plan Goals"
+              />
+            
+          )}
+        </View>
+    </ScrollView>
   );
 };
 

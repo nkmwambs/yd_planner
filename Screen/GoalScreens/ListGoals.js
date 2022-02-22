@@ -16,9 +16,9 @@ const ListGoals = ({ route, navigation }) => {
     const [loading, setLoading] = useState(true);
     const {theme} = useContext(GlobalContext)
 
-    const {planId, statisticsChanged} = useContext(PlanContext)
+    const {planId, statisticsChanged, updateStatisticsChanged} = useContext(PlanContext)
     const [isFetching, setIsFetching] = useState(false)
-    const [goalId, setGoalId] = useState(0)
+    //const [goalId, setGoalId] = useState(0)
 
     //const { planId } = route.params;
 
@@ -55,6 +55,7 @@ const ListGoals = ({ route, navigation }) => {
         const url = Endpoints.delete_goal + "?goal_id=" + id; 
         
         await getItems(url).then((data) => {
+            statisticsChanged ? updateStatisticsChanged(false) :  updateStatisticsChanged(true);
             onRefresh()  
         })
 
@@ -89,7 +90,7 @@ const ListGoals = ({ route, navigation }) => {
                     renderItem={renderItem}
                     onRefresh={onRefresh}
                     refreshing={isFetching}
-                    extraData={goalId}
+                    //extraData={goalId}
                     ListEmptyComponent={<EmptyList/>}
                 />
             }

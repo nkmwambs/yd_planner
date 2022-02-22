@@ -1,25 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react'
-import {
-    StyleSheet,
-    ScrollView,
-    BackHandler,
-    Alert,
-} from "react-native";
+import { StyleSheet, ScrollView, BackHandler, Alert, RefreshControl} from "react-native";
 import SafeAreaView from 'react-native-safe-area-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 import Strings from '../../Constants/Strings/en'
 import Endpoints from '../../Constants/Endpoints'
-
 import RecentActivities from './RecentActivities'
 import Notices from './Notices'
 import Statistics from './Statistics'
 import ThemeChanger from '../Components/ThemeChanger'
 import UserAvatar from '../DashboardScreens/UserAvatar'
-
 import {GlobalContext} from '../../Context/GlobalContext'
 import { PlanContext } from "../../Context/PlanContext";
+
+const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
 
 export default DashboardScreen = ({ navigation }) => {
 
@@ -27,9 +22,16 @@ export default DashboardScreen = ({ navigation }) => {
     const [dueTasks, setDueTasks] = useState(0);
     const [overdueTasks, setOverdueTasks] = useState(0);
     //const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = React.useState(false);
     
     const {changeTheme, theme_name} = useContext(GlobalContext)
     const {updateCurrentPlanId, statisticsChanged} = useContext(PlanContext)
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        getStatistics()
+        wait(2000).then(() => setRefreshing(false));
+      }, []);
 
     useEffect(() => {
         useBackAction();
@@ -111,7 +113,15 @@ export default DashboardScreen = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
+            <ScrollView 
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                    <RefreshControl
+                      refreshing={refreshing}
+                      onRefresh={onRefresh}
+                    />
+                  }
+                >
                 <ThemeChanger clickHandler={updateTheme} />
                 <UserAvatar />
                 <Statistics
