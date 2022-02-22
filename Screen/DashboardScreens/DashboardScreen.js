@@ -26,9 +26,9 @@ export default DashboardScreen = ({ navigation }) => {
     const [overdueGoals, setOverdueGoals] = useState(0);
     const [dueTasks, setDueTasks] = useState(0);
     const [overdueTasks, setOverdueTasks] = useState(0);
-    const [loading, setLoading] = useState(true);
+    //const [loading, setLoading] = useState(true);
     
-    const {theme, changeTheme, theme_name, updateLanguagePhrases} = useContext(GlobalContext)
+    const {changeTheme, theme_name} = useContext(GlobalContext)
     const {updateCurrentPlanId, statisticsChanged} = useContext(PlanContext)
 
     useEffect(() => {
