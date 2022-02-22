@@ -1,3 +1,5 @@
+.expo-shared/
+yarn-error.log
 node_modules/
 .expo/
 npm-debug.*
